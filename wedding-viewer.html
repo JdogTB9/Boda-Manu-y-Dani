@@ -430,6 +430,9 @@
     z-index: 999;
   }
 </style>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -1007,13 +1010,32 @@ function applyState(s) {
   renderSpeeches(s.activeSpeeches || []);
 }
 
+// BroadcastChannel as local fallback
 const channel = new BroadcastChannel('wedding-channel');
 channel.onmessage = e => applyState(e.data);
 
 applyState(state);
 
-// ─── FIREBASE INTEGRATION POINT ───
-// onValue(ref(db, 'weddingState'), snap => { if(snap.val()) applyState(snap.val()); });
+// ─── FIREBASE ───
+const firebaseConfig = {
+  apiKey: "AIzaSyAMUKXjssHJJRLp-UEIY2Vj0lFumUin3jc",
+  authDomain: "boda-many-y-dani.firebaseapp.com",
+  databaseURL: "https://boda-many-y-dani-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "boda-many-y-dani",
+  storageBucket: "boda-many-y-dani.firebasestorage.app",
+  messagingSenderId: "1001812545389",
+  appId: "1:1001812545389:web:da29ef783693a61b81d464"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+db.ref('weddingState').on('value', (snapshot) => {
+  const remote = snapshot.val();
+  if (remote) {
+    applyState({ page: remote.page || 'landing', activeSpeeches: remote.activeSpeeches || [] });
+  }
+});
 </script>
 </body>
 </html>
