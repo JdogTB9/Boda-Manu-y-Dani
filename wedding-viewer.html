@@ -108,7 +108,7 @@
   /* & same color as names */
   .landing-amp {
     font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
+    font-style: normal;
     font-weight: 300;
     font-size: clamp(2rem, 8vw, 4rem);
     color: var(--olive-dark);
@@ -429,6 +429,188 @@
     pointer-events: none;
     z-index: 999;
   }
+
+  /* ─── MESSAGE CTA (landing button) ─── */
+  .message-cta {
+    margin-top: 2.5rem;
+    background: var(--olive-dark);
+    color: var(--cream);
+    border: none;
+    border-radius: 28px;
+    padding: 0.85rem 1.6rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.25s, transform 0.15s, box-shadow 0.25s;
+    box-shadow: 0 2px 10px rgba(74,86,56,0.18);
+  }
+
+  .message-cta:hover { background: var(--olive-mid); }
+  .message-cta:active { transform: translateY(1px); }
+
+  /* ─── COMPOSE VIEW ─── */
+  #compose-view {
+    display: none;
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--cream);
+    position: relative;
+    overflow: hidden;
+    padding: 2rem 1.25rem;
+  }
+
+  #compose-view::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 110%, rgba(138,154,106,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 20% 0%, rgba(201,184,154,0.25) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .compose-inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 460px;
+    text-align: center;
+  }
+
+  .compose-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(1.6rem, 6vw, 2.2rem);
+    line-height: 1.2;
+    color: var(--olive-dark);
+    margin-bottom: 0.4rem;
+  }
+
+  .compose-subtitle {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+  }
+
+  .compose-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    text-align: left;
+  }
+
+  .compose-form label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 0.35rem;
+    display: block;
+  }
+
+  .compose-form input,
+  .compose-form textarea {
+    width: 100%;
+    background: white;
+    border: 1px solid var(--beige-mid);
+    border-radius: 10px;
+    padding: 0.8rem 0.95rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+
+  .compose-form input:focus,
+  .compose-form textarea:focus {
+    outline: none;
+    border-color: var(--olive-light);
+    box-shadow: 0 0 0 3px rgba(138,154,106,0.15);
+  }
+
+  .compose-form textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.55;
+    font-family: 'Jost', sans-serif;
+  }
+
+  .compose-buttons {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1rem;
+  }
+
+  .compose-btn {
+    flex: 1;
+    border: none;
+    border-radius: 28px;
+    padding: 0.85rem 1rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.15s, opacity 0.2s;
+  }
+
+  .compose-btn.primary {
+    background: var(--olive-dark);
+    color: var(--cream);
+  }
+  .compose-btn.primary:hover { background: var(--olive-mid); }
+  .compose-btn.primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .compose-btn.secondary {
+    background: transparent;
+    color: var(--text-mid);
+    border: 1px solid var(--beige-dark);
+  }
+  .compose-btn.secondary:hover { background: var(--beige-light); }
+
+  .compose-btn:active { transform: translateY(1px); }
+
+  .compose-success {
+    display: none;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border: 1px solid var(--beige-mid);
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .compose-success.visible { display: block; }
+
+  .compose-success-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--olive-dark);
+    margin-bottom: 0.3rem;
+  }
+
+  .compose-success-sub {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-light);
+  }
 </style>
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -452,6 +634,41 @@
     <p class="landing-tagline">Bienvenidos a nuestra boda · Welcome to our wedding</p>
     <div class="waiting-pulse">
       <span></span><span></span><span></span>
+    </div>
+    <button id="open-message-btn" class="message-cta">
+      Enviar mensaje a los novios · Send a message to the couple
+    </button>
+  </div>
+</div>
+
+<!-- ─── COMPOSE MESSAGE VIEW ─── -->
+<div id="compose-view">
+  <div class="compose-inner">
+    <h2 class="compose-title">Un mensaje para Manu &amp; Dani</h2>
+    <p class="compose-subtitle">A message for Manu &amp; Dani</p>
+
+    <form class="compose-form" id="compose-form" autocomplete="off">
+      <div>
+        <label for="msg-name">Tu nombre · Your name</label>
+        <input id="msg-name" name="name" type="text" maxlength="60" required>
+      </div>
+      <div>
+        <label for="msg-text">Tu mensaje · Your message</label>
+        <textarea id="msg-text" name="message" maxlength="500" required></textarea>
+      </div>
+      <div class="compose-buttons">
+        <button type="button" class="compose-btn secondary" id="cancel-msg-btn">
+          Cancelar · Cancel
+        </button>
+        <button type="submit" class="compose-btn primary" id="send-msg-btn">
+          Enviar · Send
+        </button>
+      </div>
+    </form>
+
+    <div class="compose-success" id="compose-success">
+      <div class="compose-success-title">¡Gracias!</div>
+      <div class="compose-success-sub">Mensaje enviado · Message sent</div>
     </div>
   </div>
 </div>
@@ -996,17 +1213,28 @@ function fmt(text) {
 ═══════════════════════ */
 let state = { page: 'landing', activeSpeeches: [] };
 
-function showLanding() {
-  document.getElementById('landing').style.display = 'flex';
-  document.getElementById('main-view').style.display = 'none';
-}
-function showMain() {
-  document.getElementById('landing').style.display = 'none';
-  document.getElementById('main-view').style.display = 'flex';
+let viewState = 'landing'; // 'landing' | 'compose' — local only, not synced
+
+function setView(v) {
+  const landing = document.getElementById('landing');
+  const compose = document.getElementById('compose-view');
+  const main    = document.getElementById('main-view');
+  landing.style.display = v === 'landing' ? 'flex' : 'none';
+  compose.style.display = v === 'compose' ? 'flex' : 'none';
+  main.style.display    = v === 'main'    ? 'flex' : 'none';
 }
 
+function showLanding() { setView('landing'); }
+function showMain()    { setView('main'); }
+function showCompose() { setView('compose'); }
+
 function applyState(s) {
-  if (s.page === 'main') showMain(); else showLanding();
+  if (s.page === 'main') {
+    showMain();
+  } else {
+    // page is 'landing' → respect local viewState
+    if (viewState === 'compose') showCompose(); else showLanding();
+  }
   renderSpeeches(s.activeSpeeches || []);
 }
 
@@ -1034,6 +1262,59 @@ db.ref('weddingState').on('value', (snapshot) => {
   const remote = snapshot.val();
   if (remote) {
     applyState({ page: remote.page || 'landing', activeSpeeches: remote.activeSpeeches || [] });
+  }
+});
+
+/* ═══════════════════════
+   MESSAGES — form handling
+═══════════════════════ */
+const composeForm   = document.getElementById('compose-form');
+const nameInput     = document.getElementById('msg-name');
+const msgInput      = document.getElementById('msg-text');
+const sendBtn       = document.getElementById('send-msg-btn');
+const cancelBtn     = document.getElementById('cancel-msg-btn');
+const openBtn       = document.getElementById('open-message-btn');
+const successBox    = document.getElementById('compose-success');
+
+openBtn.addEventListener('click', () => {
+  viewState = 'compose';
+  nameInput.value = '';
+  msgInput.value = '';
+  successBox.classList.remove('visible');
+  composeForm.style.display = '';
+  sendBtn.disabled = false;
+  showCompose();
+  setTimeout(() => nameInput.focus(), 50);
+});
+
+cancelBtn.addEventListener('click', () => {
+  viewState = 'landing';
+  showLanding();
+});
+
+composeForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const name = nameInput.value.trim();
+  const text = msgInput.value.trim();
+  if (!name || !text) return;
+
+  sendBtn.disabled = true;
+  try {
+    await db.ref('messages').push({
+      name,
+      message: text,
+      timestamp: firebase.database.ServerValue.TIMESTAMP
+    });
+    composeForm.style.display = 'none';
+    successBox.classList.add('visible');
+    setTimeout(() => {
+      viewState = 'landing';
+      showLanding();
+    }, 1600);
+  } catch (err) {
+    console.error('Error sending message:', err);
+    sendBtn.disabled = false;
+    alert('No se ha podido enviar el mensaje. Inténtalo de nuevo.\nCould not send the message. Please try again.');
   }
 });
 </script>

@@ -413,6 +413,161 @@
     border-top: 1px solid var(--beige-mid);
     margin-top: 1rem;
   }
+
+  /* ─── TABS ─── */
+  .master-tabs {
+    display: flex;
+    background: white;
+    border: 1px solid var(--beige-mid);
+    border-radius: 12px;
+    padding: 4px;
+    gap: 4px;
+    margin-bottom: 1.5rem;
+  }
+
+  .tab-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 0.7rem 0.8rem;
+    border-radius: 8px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+  }
+
+  .tab-btn:hover { color: var(--text-mid); }
+
+  .tab-btn.active {
+    background: var(--olive-dark);
+    color: var(--cream);
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ─── MESSAGES SECTION ─── */
+  .messages-count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 7px;
+    border-radius: 11px;
+    background: var(--olive-dark);
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    margin-left: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .messages-count-badge.zero {
+    background: var(--beige-mid);
+    color: var(--text-light);
+  }
+
+  /* Badge adapts when sitting inside an active tab button */
+  .tab-btn.active .messages-count-badge {
+    background: var(--cream);
+    color: var(--olive-dark);
+  }
+  .tab-btn.active .messages-count-badge.zero {
+    background: rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.7);
+  }
+
+  .messages-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin-bottom: 2rem;
+  }
+
+  .message-card {
+    background: white;
+    border: 1px solid var(--beige-mid);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    position: relative;
+    overflow: hidden;
+    animation: msg-in 0.35s ease;
+  }
+
+  .message-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--brown-light);
+  }
+
+  @keyframes msg-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .message-card .message-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .message-card .name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--olive-dark);
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
+  .message-card .time {
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    flex-shrink: 0;
+  }
+
+  .message-card .text {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--text-mid);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .messages-empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    background: white;
+    border: 1px dashed var(--beige-mid);
+    border-radius: 12px;
+  }
 </style>
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -436,36 +591,55 @@
     <span>Emitiendo en tiempo real a todos los dispositivos</span>
   </div>
 
-  <!-- Progress bar -->
-  <div class="status-bar">
-    <div class="status-bar-title">Progreso de la ceremonia</div>
-    <div class="progress-track">
-      <div class="progress-fill" id="progress-fill"></div>
-    </div>
-    <div class="progress-labels">
-      <span id="progress-label">0 de 5 discursos</span>
-      <span id="progress-pct">0%</span>
-    </div>
+  <!-- Tab navigation -->
+  <div class="master-tabs" role="tablist">
+    <button class="tab-btn active" data-tab="ceremony" role="tab">Ceremonia</button>
+    <button class="tab-btn" data-tab="messages" role="tab">
+      Mensajes
+      <span id="messages-count" class="messages-count-badge zero">0</span>
+    </button>
   </div>
 
-  <!-- Page control -->
-  <div class="section-title">Pantalla principal</div>
-  <div class="page-control" style="margin-bottom:2rem">
-    <div class="page-control-row">
-      <div class="page-control-info">
-        <h2><span class="status-dot" id="page-dot"></span>Mostrar discursos</h2>
-        <p id="page-desc">La pantalla muestra la landing page</p>
+  <!-- Ceremony tab -->
+  <div class="tab-content active" data-tab-content="ceremony">
+    <!-- Progress bar -->
+    <div class="status-bar">
+      <div class="status-bar-title">Progreso de la ceremonia</div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
       </div>
-      <label class="toggle-switch">
-        <input type="checkbox" id="page-toggle">
-        <span class="toggle-track"></span>
-      </label>
+      <div class="progress-labels">
+        <span id="progress-label">0 de 5 discursos</span>
+        <span id="progress-pct">0%</span>
+      </div>
     </div>
+
+    <!-- Page control -->
+    <div class="section-title">Pantalla principal</div>
+    <div class="page-control" style="margin-bottom:2rem">
+      <div class="page-control-row">
+        <div class="page-control-info">
+          <h2><span class="status-dot" id="page-dot"></span>Mostrar discursos</h2>
+          <p id="page-desc">La pantalla muestra la landing page</p>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="page-toggle">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Speeches -->
+    <div class="section-title">Discursos</div>
+    <div class="speeches-list" id="speeches-list"></div>
   </div>
 
-  <!-- Speeches -->
-  <div class="section-title">Discursos</div>
-  <div class="speeches-list" id="speeches-list"></div>
+  <!-- Messages tab -->
+  <div class="tab-content" data-tab-content="messages">
+    <div class="messages-list" id="messages-list">
+      <div class="messages-empty">Aún no hay mensajes</div>
+    </div>
+  </div>
 
   <div class="master-footer">Manu &amp; Dani · 06 · 06 · 2026</div>
 </div>
@@ -631,6 +805,19 @@ document.getElementById('page-toggle').addEventListener('change', function() {
   broadcast();
 });
 
+// ─── TABS ───
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.toggle('active', b === btn);
+    });
+    document.querySelectorAll('.tab-content').forEach(c => {
+      c.classList.toggle('active', c.dataset.tabContent === tab);
+    });
+  });
+});
+
 // ─── INIT ───
 updateUI();
 
@@ -643,6 +830,57 @@ stateRef.on('value', (snapshot) => {
     document.getElementById('page-toggle').checked = state.page === 'main';
     updateUI();
   }
+});
+
+// ─── MESSAGES ───
+const messagesRef = db.ref('messages');
+let allMessages = [];
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function formatTime(ts) {
+  if (!ts) return '';
+  const d = new Date(ts);
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  return `${hh}:${mm}`;
+}
+
+function renderMessages() {
+  const list  = document.getElementById('messages-list');
+  const count = document.getElementById('messages-count');
+  count.textContent = allMessages.length;
+  count.classList.toggle('zero', allMessages.length === 0);
+
+  if (allMessages.length === 0) {
+    list.innerHTML = '<div class="messages-empty">Aún no hay mensajes</div>';
+    return;
+  }
+
+  list.innerHTML = allMessages.map(m => `
+    <div class="message-card">
+      <div class="message-head">
+        <div class="name">${escapeHtml(m.name)}</div>
+        ${m.timestamp ? `<div class="time">${formatTime(m.timestamp)}</div>` : ''}
+      </div>
+      <div class="text">${escapeHtml(m.message)}</div>
+    </div>
+  `).join('');
+}
+
+messagesRef.on('value', (snapshot) => {
+  const data = snapshot.val() || {};
+  allMessages = Object.entries(data)
+    .map(([id, msg]) => ({ id, ...msg }))
+    .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+  renderMessages();
 });
 </script>
 </body>
