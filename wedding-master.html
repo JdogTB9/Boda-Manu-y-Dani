@@ -25,6 +25,7 @@
     --cream: #faf6ef;
     --green-active: #4a5638;
     --green-active-bg: #eef2e8;
+    --danger: #c0392b;
   }
 
   html, body {
@@ -80,7 +81,7 @@
 
   /* ─── CONTENT ─── */
   .master-content {
-    max-width: 640px;
+    max-width: 720px;
     margin: 0 auto;
     padding: 1.5rem;
   }
@@ -134,7 +135,6 @@
     margin-top: 0.2rem;
   }
 
-  /* Status indicator */
   .status-dot {
     width: 8px;
     height: 8px;
@@ -220,6 +220,11 @@
     box-shadow: 0 0 0 3px rgba(138,154,106,0.12);
   }
 
+  .speech-master-card.filled {
+    border-color: var(--brown-mid);
+    background: #fbf7f1;
+  }
+
   .speech-master-card::before {
     content: '';
     position: absolute;
@@ -233,6 +238,10 @@
 
   .speech-master-card.active::before {
     background: var(--olive-mid);
+  }
+
+  .speech-master-card.filled::before {
+    background: var(--brown-mid);
   }
 
   .card-main-row {
@@ -261,6 +270,12 @@
     background: var(--olive-dark);
     color: white;
     border-color: var(--olive-dark);
+  }
+
+  .speech-master-card.filled .card-order {
+    background: var(--brown-mid);
+    color: white;
+    border-color: var(--brown-dark);
   }
 
   .card-info {
@@ -323,6 +338,28 @@
     flex-shrink: 0;
   }
 
+  .finish-btn {
+    margin-top: 0.75rem;
+    margin-left: 34px;
+    background: var(--olive-dark);
+    color: var(--cream);
+    border: none;
+    border-radius: 18px;
+    padding: 0.45rem 0.9rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+  }
+  .finish-btn:hover { background: var(--olive-mid); }
+  .finish-btn:disabled {
+    background: var(--brown-mid);
+    cursor: not-allowed;
+    opacity: 0.85;
+  }
+
   /* ─── STATUS BAR ─── */
   .status-bar {
     background: white;
@@ -373,6 +410,7 @@
   [data-layer="coconut"] .layer-chip-dot { background: #b8924a; }
   [data-layer="perlite"] .layer-chip-dot { background: #b0aaa0; }
   [data-layer="pine"] .layer-chip-dot { background: #8b6035; }
+  [data-layer="seeds"] .layer-chip-dot { background: #a07838; }
 
   /* ─── BROADCAST STATUS ─── */
   .broadcast-status {
@@ -456,7 +494,7 @@
   .tab-content { display: none; }
   .tab-content.active { display: block; }
 
-  /* ─── MESSAGES SECTION ─── */
+  /* ─── BADGES ─── */
   .messages-count-badge {
     display: inline-flex;
     align-items: center;
@@ -480,7 +518,6 @@
     color: var(--text-light);
   }
 
-  /* Badge adapts when sitting inside an active tab button */
   .tab-btn.active .messages-count-badge {
     background: var(--cream);
     color: var(--olive-dark);
@@ -490,47 +527,95 @@
     color: rgba(255,255,255,0.7);
   }
 
-  .messages-list {
+  /* ─── RESET BUTTON ─── */
+  .reset-row {
     display: flex;
-    flex-direction: column;
-    gap: 0.7rem;
-    margin-bottom: 2rem;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
   }
 
-  .message-card {
+  .reset-btn {
+    background: transparent;
+    border: 1px solid var(--beige-dark);
+    color: var(--text-mid);
+    padding: 0.5rem 0.9rem;
+    border-radius: 18px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .reset-btn:hover { background: var(--beige-light); color: var(--text-dark); }
+
+  /* ─── GALLERY (mensajes + fotos) ─── */
+  .gallery-controls {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+    align-items: center;
+  }
+
+  .search-bar {
+    flex: 1;
+    background: white;
+    border: 1px solid var(--beige-mid);
+    border-radius: 10px;
+    padding: 0.6rem 0.9rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-dark);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+  .search-bar:focus {
+    outline: none;
+    border-color: var(--olive-light);
+    box-shadow: 0 0 0 3px rgba(138,154,106,0.15);
+  }
+
+  .total-counter {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    white-space: nowrap;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .memory-card {
     background: white;
     border: 1px solid var(--beige-mid);
     border-radius: 12px;
-    padding: 1rem 1.2rem;
+    padding: 1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
     position: relative;
     overflow: hidden;
-    animation: msg-in 0.35s ease;
   }
-
-  .message-card::before {
+  .memory-card::before {
     content: '';
     position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
+    left: 0; top: 0; bottom: 0;
     width: 3px;
     background: var(--brown-light);
   }
 
-  @keyframes msg-in {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .message-card .message-head {
+  .memory-header {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 0.4rem;
+    gap: 0.5rem;
   }
-
-  .message-card .name {
+  .memory-header h3 {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 600;
     font-size: 1.05rem;
@@ -538,23 +623,90 @@
     line-height: 1.2;
     word-break: break-word;
   }
-
-  .message-card .time {
-    font-size: 0.65rem;
+  .memory-date {
+    font-size: 0.6rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text-light);
+    white-space: nowrap;
     flex-shrink: 0;
   }
 
-  .message-card .text {
+  .memory-message {
     font-family: 'Jost', sans-serif;
     font-weight: 300;
     font-size: 0.9rem;
-    line-height: 1.65;
+    line-height: 1.6;
     color: var(--text-mid);
-    white-space: pre-wrap;
     word-break: break-word;
+  }
+  .memory-message p { margin-bottom: 0.5em; }
+  .memory-message p:last-child { margin-bottom: 0; }
+
+  .memory-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 6px;
+  }
+  .memory-images img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid var(--beige-mid);
+    transition: transform 0.2s;
+  }
+  .memory-images img:hover { transform: scale(1.04); }
+
+  .memory-footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .delete-btn {
+    background: transparent;
+    border: 1px solid var(--beige-dark);
+    color: var(--danger);
+    padding: 0.3rem 0.7rem;
+    border-radius: 14px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .delete-btn:hover { background: var(--danger); color: white; border-color: var(--danger); }
+
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .pagination-controls button {
+    background: white;
+    border: 1px solid var(--beige-mid);
+    color: var(--text-mid);
+    padding: 0.45rem 0.9rem;
+    border-radius: 14px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .pagination-controls button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .pagination-info {
+    font-size: 0.7rem;
+    color: var(--text-light);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
   .messages-empty {
@@ -572,6 +724,7 @@
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -585,13 +738,11 @@
 
 <div class="master-content">
 
-  <!-- Broadcast status -->
   <div class="broadcast-status">
     <div class="broadcast-dot"></div>
     <span>Emitiendo en tiempo real a todos los dispositivos</span>
   </div>
 
-  <!-- Tab navigation -->
   <div class="master-tabs" role="tablist">
     <button class="tab-btn active" data-tab="ceremony" role="tab">Ceremonia</button>
     <button class="tab-btn" data-tab="messages" role="tab">
@@ -602,25 +753,24 @@
 
   <!-- Ceremony tab -->
   <div class="tab-content active" data-tab-content="ceremony">
-    <!-- Progress bar -->
+
     <div class="status-bar">
       <div class="status-bar-title">Progreso de la ceremonia</div>
       <div class="progress-track">
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div class="progress-labels">
-        <span id="progress-label">0 de 5 discursos</span>
+        <span id="progress-label">0 de 6 capas rellenadas</span>
         <span id="progress-pct">0%</span>
       </div>
     </div>
 
-    <!-- Page control -->
     <div class="section-title">Pantalla principal</div>
     <div class="page-control" style="margin-bottom:2rem">
       <div class="page-control-row">
         <div class="page-control-info">
           <h2><span class="status-dot" id="page-dot"></span>Mostrar discursos</h2>
-          <p id="page-desc">La pantalla muestra la landing page</p>
+          <p id="page-desc">La pantalla muestra la portada</p>
         </div>
         <label class="toggle-switch">
           <input type="checkbox" id="page-toggle">
@@ -629,16 +779,24 @@
       </div>
     </div>
 
-    <!-- Speeches -->
     <div class="section-title">Discursos</div>
     <div class="speeches-list" id="speeches-list"></div>
+
+    <div class="reset-row">
+      <button class="reset-btn" id="reset-layers-btn" title="Vacía la maceta del viewer">↺ Reiniciar capas</button>
+    </div>
   </div>
 
   <!-- Messages tab -->
   <div class="tab-content" data-tab-content="messages">
-    <div class="messages-list" id="messages-list">
+    <div class="gallery-controls">
+      <input type="text" class="search-bar" id="search-input" placeholder="Buscar por nombre…">
+      <span class="total-counter" id="total-counter">0 mensajes</span>
+    </div>
+    <div class="gallery-grid" id="gallery">
       <div class="messages-empty">Aún no hay mensajes</div>
     </div>
+    <div class="pagination-controls" id="pagination"></div>
   </div>
 
   <div class="master-footer">Manu &amp; Dani · 06 · 06 · 2026</div>
@@ -646,47 +804,18 @@
 
 <script>
 const SPEECHES = [
-  {
-    id: 1,
-    speaker: "Carlos & Elena",
-    role: "Padres de Manu",
-    layer: "rocks",
-    layerName: "Piedras grandes"
-  },
-  {
-    id: 2,
-    speaker: "Rosa & Tomás",
-    role: "Padres de Dani",
-    layer: "soil",
-    layerName: "Tierra"
-  },
-  {
-    id: 3,
-    speaker: "Sofía",
-    role: "Mejor amiga de Dani",
-    layer: "coconut",
-    layerName: "Fibra de coco"
-  },
-  {
-    id: 4,
-    speaker: "Pablo & Sergio",
-    role: "Amigos de Manu",
-    layer: "perlite",
-    layerName: "Perlita"
-  },
-  {
-    id: 5,
-    speaker: "Abuelos",
-    role: "Familia",
-    layer: "pine",
-    layerName: "Cortezas de pino"
-  }
+  { id: 1, speaker: "Familia",    role: "Familia",                  layer: "rocks",   layerName: "Piedras" },
+  { id: 2, speaker: "Celia",      role: "Amigos de Manu",           layer: "soil",    layerName: "Tierra" },
+  { id: 3, speaker: "Sol",        role: "Amigos de Dani",           layer: "perlite", layerName: "Perlita" },
+  { id: 4, speaker: "Celia",      role: "Amigos en común",          layer: "coconut", layerName: "Fibra de coco" },
+  { id: 5, speaker: "Pree & Dom", role: "Amigos internacionales",   layer: "pine",    layerName: "Corteza de pino" },
+  { id: 6, speaker: "Manu & Dani",role: "Los novios",               layer: "seeds",   layerName: "Semillas" }
 ];
 
-// ─── STATE ───
 let state = {
   page: 'landing',
-  activeSpeeches: []
+  activeSpeeches: [],
+  filledLayers: []
 };
 
 // ─── FIREBASE ───
@@ -701,10 +830,10 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const stateRef = db.ref('weddingState');
+const rtdb = firebase.database();
+const stateRef = rtdb.ref('weddingState');
+const fsdb = firebase.firestore();
 
-// BroadcastChannel as local fallback
 const channel = new BroadcastChannel('wedding-channel');
 
 function broadcast() {
@@ -719,8 +848,9 @@ function renderList() {
 
   SPEECHES.forEach((speech, i) => {
     const isActive = state.activeSpeeches.includes(speech.id);
+    const isFilled = state.filledLayers.includes(speech.layer);
     const card = document.createElement('div');
-    card.className = `speech-master-card${isActive ? ' active' : ''}`;
+    card.className = `speech-master-card${isActive ? ' active' : ''}${isFilled ? ' filled' : ''}`;
     card.setAttribute('data-layer', speech.layer);
 
     card.innerHTML = `
@@ -730,7 +860,7 @@ function renderList() {
           <div class="card-title">${speech.speaker}</div>
           <div class="card-subtitle">${speech.role}</div>
         </div>
-        <label class="toggle-switch" title="Activar discurso">
+        <label class="toggle-switch" title="Mostrar discurso en el viewer">
           <input type="checkbox" data-id="${speech.id}" ${isActive ? 'checked' : ''}>
           <span class="toggle-track"></span>
         </label>
@@ -742,18 +872,20 @@ function renderList() {
         </span>
         <div class="card-status">
           <span class="status-dot${isActive ? ' active' : ''}"></span>
-          <span style="color: ${isActive ? 'var(--olive-mid)' : 'var(--text-light)'}; font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase">
-            ${isActive ? 'Activo · visible en pantalla' : 'Inactivo · oculto'}
+          <span style="color: ${isFilled ? 'var(--brown-mid)' : (isActive ? 'var(--olive-mid)' : 'var(--text-light)')}; font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase">
+            ${isFilled ? 'Capa rellenada' : (isActive ? 'Activo · visible en pantalla' : 'Inactivo · oculto')}
           </span>
         </div>
       </div>
+      <button class="finish-btn" data-finish-id="${speech.id}" ${isFilled ? 'disabled' : ''} ${!isActive ? 'disabled' : ''}>
+        ${isFilled ? '✓ Capa rellenada' : '✓ Marcar terminado'}
+      </button>
     `;
 
     const checkbox = card.querySelector('input[type="checkbox"]');
     checkbox.addEventListener('change', () => {
       const id = parseInt(checkbox.dataset.id);
       if (checkbox.checked) {
-        // Add in order
         if (!state.activeSpeeches.includes(id)) {
           state.activeSpeeches = SPEECHES
             .filter(s => state.activeSpeeches.includes(s.id) || s.id === id)
@@ -764,6 +896,16 @@ function renderList() {
       }
       updateUI();
       broadcast();
+    });
+
+    const finishBtn = card.querySelector('.finish-btn');
+    finishBtn.addEventListener('click', () => {
+      if (finishBtn.disabled) return;
+      if (!state.filledLayers.includes(speech.layer)) {
+        state.filledLayers = [...state.filledLayers, speech.layer];
+        updateUI();
+        broadcast();
+      }
     });
 
     list.appendChild(card);
@@ -778,18 +920,19 @@ function updatePageControl() {
   const desc = document.getElementById('page-desc');
 
   const isMain = state.page === 'main';
+  toggle.checked = isMain;
   dot.classList.toggle('active', isMain);
   desc.textContent = isMain
     ? 'La pantalla muestra los discursos'
-    : 'La pantalla muestra la landing page';
+    : 'La pantalla muestra la portada';
 }
 
 function updateProgress() {
   const total = SPEECHES.length;
-  const active = state.activeSpeeches.length;
-  const pct = Math.round((active / total) * 100);
+  const filled = state.filledLayers.length;
+  const pct = Math.round((filled / total) * 100);
   document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('progress-label').textContent = `${active} de ${total} discursos`;
+  document.getElementById('progress-label').textContent = `${filled} de ${total} capas rellenadas`;
   document.getElementById('progress-pct').textContent = pct + '%';
 }
 
@@ -801,6 +944,15 @@ function updateUI() {
 // ─── PAGE TOGGLE ───
 document.getElementById('page-toggle').addEventListener('change', function() {
   state.page = this.checked ? 'main' : 'landing';
+  updateUI();
+  broadcast();
+});
+
+// ─── RESET LAYERS ───
+document.getElementById('reset-layers-btn').addEventListener('click', () => {
+  if (state.filledLayers.length === 0) return;
+  if (!confirm('¿Vaciar la maceta? Se borrarán todas las capas rellenadas en el viewer.')) return;
+  state.filledLayers = [];
   updateUI();
   broadcast();
 });
@@ -818,26 +970,35 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
 
-// ─── INIT ───
 updateUI();
 
-// ─── FIREBASE SYNC ───
-// On load, read current state from Firebase (in case master reloads)
+// ─── FIREBASE SYNC (state) ───
 stateRef.on('value', (snapshot) => {
   const remote = snapshot.val();
   if (remote) {
-    state = { page: remote.page || 'landing', activeSpeeches: remote.activeSpeeches || [] };
-    document.getElementById('page-toggle').checked = state.page === 'main';
+    state = {
+      page: remote.page || 'landing',
+      activeSpeeches: remote.activeSpeeches || [],
+      filledLayers: remote.filledLayers || []
+    };
     updateUI();
   }
 });
 
-// ─── MESSAGES ───
-const messagesRef = db.ref('messages');
-let allMessages = [];
+// ─── MESSAGES + GALLERY (Firestore) ───
+let allMemories = [];
+const ITEMS_PER_PAGE = 9;
+let currentPage = 1;
+let searchTerm = '';
+
+const galleryEl     = document.getElementById('gallery');
+const paginationEl  = document.getElementById('pagination');
+const totalCounter  = document.getElementById('total-counter');
+const searchInput   = document.getElementById('search-input');
+const messagesBadge = document.getElementById('messages-count');
 
 function escapeHtml(s) {
-  return String(s)
+  return String(s == null ? '' : s)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
@@ -845,43 +1006,122 @@ function escapeHtml(s) {
     .replace(/'/g, '&#39;');
 }
 
-function formatTime(ts) {
+function formatDate(ts) {
   if (!ts) return '';
-  const d = new Date(ts);
-  const hh = String(d.getHours()).padStart(2, '0');
-  const mm = String(d.getMinutes()).padStart(2, '0');
-  return `${hh}:${mm}`;
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleString('es-ES', {
+    day: '2-digit', month: '2-digit', year: '2-digit',
+    hour: '2-digit', minute: '2-digit'
+  });
 }
 
-function renderMessages() {
-  const list  = document.getElementById('messages-list');
-  const count = document.getElementById('messages-count');
-  count.textContent = allMessages.length;
-  count.classList.toggle('zero', allMessages.length === 0);
+function getImageUrls(data) {
+  if (Array.isArray(data.imageUrls)) return data.imageUrls;
+  if (Array.isArray(data.files)) {
+    return data.files
+      .filter(f => f && f.type && f.type.startsWith('image/'))
+      .map(f => f.url);
+  }
+  return [];
+}
 
-  if (allMessages.length === 0) {
-    list.innerHTML = '<div class="messages-empty">Aún no hay mensajes</div>';
+function renderGallery() {
+  const filtered = allMemories.filter(m =>
+    (m.data.guestName || '').toLowerCase().includes(searchTerm)
+  );
+
+  totalCounter.textContent = `${allMemories.length} mensaje${allMemories.length === 1 ? '' : 's'}`;
+  messagesBadge.textContent = allMemories.length;
+  messagesBadge.classList.toggle('zero', allMemories.length === 0);
+
+  if (filtered.length === 0) {
+    galleryEl.innerHTML = `<div class="messages-empty" style="grid-column:1/-1">${
+      allMemories.length === 0 ? 'Aún no hay mensajes' : 'Ningún mensaje coincide con la búsqueda'
+    }</div>`;
+    paginationEl.innerHTML = '';
     return;
   }
 
-  list.innerHTML = allMessages.map(m => `
-    <div class="message-card">
-      <div class="message-head">
-        <div class="name">${escapeHtml(m.name)}</div>
-        ${m.timestamp ? `<div class="time">${formatTime(m.timestamp)}</div>` : ''}
+  const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
+  if (currentPage > totalPages) currentPage = totalPages;
+  const start = (currentPage - 1) * ITEMS_PER_PAGE;
+  const pageItems = filtered.slice(start, start + ITEMS_PER_PAGE);
+
+  galleryEl.innerHTML = pageItems.map(item => {
+    const data = item.data;
+    const imgs = getImageUrls(data);
+    const imagesHtml = imgs.length
+      ? `<div class="memory-images">${imgs.map(url =>
+          `<img src="${escapeHtml(url)}" alt="Foto" onclick="window.open(this.src,'_blank')">`
+        ).join('')}</div>`
+      : '';
+    const messageHtml = data.messageHTML || (data.message ? `<p>${escapeHtml(data.message)}</p>` : '');
+    return `
+      <div class="memory-card">
+        <div class="memory-header">
+          <h3>${escapeHtml(data.guestName || 'Anónimo')}</h3>
+          <span class="memory-date">${formatDate(data.createdAt)}</span>
+        </div>
+        ${messageHtml ? `<div class="memory-message">${messageHtml}</div>` : ''}
+        ${imagesHtml}
+        <div class="memory-footer">
+          <button class="delete-btn" data-id="${item.id}">Borrar</button>
+        </div>
       </div>
-      <div class="text">${escapeHtml(m.message)}</div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
+
+  galleryEl.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', () => deleteMemory(btn.dataset.id));
+  });
+
+  renderPagination(totalPages);
 }
 
-messagesRef.on('value', (snapshot) => {
-  const data = snapshot.val() || {};
-  allMessages = Object.entries(data)
-    .map(([id, msg]) => ({ id, ...msg }))
-    .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-  renderMessages();
+function renderPagination(totalPages) {
+  if (totalPages <= 1) { paginationEl.innerHTML = ''; return; }
+  paginationEl.innerHTML = `
+    <button id="prev-page" ${currentPage === 1 ? 'disabled' : ''}>← Anterior</button>
+    <span class="pagination-info">Página ${currentPage} de ${totalPages}</span>
+    <button id="next-page" ${currentPage === totalPages ? 'disabled' : ''}>Siguiente →</button>
+  `;
+  const prev = document.getElementById('prev-page');
+  const next = document.getElementById('next-page');
+  if (prev) prev.addEventListener('click', () => { currentPage--; renderGallery(); window.scrollTo({top:0, behavior:'smooth'}); });
+  if (next) next.addEventListener('click', () => { currentPage++; renderGallery(); window.scrollTo({top:0, behavior:'smooth'}); });
+}
+
+async function deleteMemory(id) {
+  const memory = allMemories.find(m => m.id === id);
+  if (!memory) return;
+  if (!confirm(`¿Borrar el mensaje de ${memory.data.guestName || 'este invitado'}? Esta acción no se puede deshacer.`)) return;
+
+  try {
+    await fsdb.collection('memories').doc(id).delete();
+    // Las fotos quedan en Cloudinary (sin backend no se pueden borrar firmadamente).
+    // Como la cuota es 25 GB y son fotos comprimidas, no es problema en una boda.
+  } catch (err) {
+    console.error('Error al borrar mensaje', err);
+    alert('No se ha podido borrar el mensaje. Revisa la consola.');
+  }
+}
+
+searchInput.addEventListener('input', () => {
+  searchTerm = searchInput.value.toLowerCase().trim();
+  currentPage = 1;
+  renderGallery();
 });
+
+// Suscripción en tiempo real a Firestore
+fsdb.collection('memories')
+  .orderBy('createdAt', 'desc')
+  .onSnapshot(snapshot => {
+    allMemories = snapshot.docs.map(doc => ({ id: doc.id, data: doc.data() }));
+    renderGallery();
+  }, err => {
+    console.error('Error escuchando memories:', err);
+    galleryEl.innerHTML = `<div class="messages-empty" style="grid-column:1/-1">Error al cargar los mensajes. Revisa permisos de Firestore.</div>`;
+  });
 </script>
 </body>
 </html>

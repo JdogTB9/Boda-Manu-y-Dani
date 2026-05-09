@@ -26,14 +26,14 @@
   }
 
   html, body {
-    height: 100%;
+    min-height: 100%;
     font-family: 'Jost', sans-serif;
     background: var(--beige-light);
     color: var(--text-dark);
     overflow-x: hidden;
   }
 
-  /* ─── LANDING ─── */
+  /* ─── LANDING (flip card) ─── */
   #landing {
     min-height: 100vh;
     display: flex;
@@ -41,11 +41,9 @@
     align-items: center;
     justify-content: center;
     background: var(--cream);
+    padding: 1.5rem;
     position: relative;
-    overflow: hidden;
-    padding: 2rem;
   }
-
   #landing::before {
     content: '';
     position: absolute;
@@ -57,96 +55,405 @@
     pointer-events: none;
   }
 
-  .landing-inner {
+  .welcome-section {
+    perspective: 1500px;
+    width: 100%;
+    max-width: 420px;
+    height: min(680px, 90vh);
     position: relative;
     z-index: 1;
-    text-align: center;
-    max-width: 600px;
   }
 
-  .landing-date-line {
+  .card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
+  }
+  .card.is-flipped { transform: rotateY(180deg); }
+  .card.is-flipped .card-front { pointer-events: none; }
+  .card.is-flipped .card-back  { pointer-events: auto; }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 26px;
+    overflow: hidden;
+    box-shadow: 0 14px 38px rgba(0,0,0,0.18);
+  }
+
+  .card-front {
+    background-image: url('portada4.jpg');
+    background-size: cover;
+    background-position: center;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    justify-content: center;
-    margin-bottom: 1.5rem;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
   }
-
-  .landing-date-line::before,
-  .landing-date-line::after {
+  .card-front::before {
     content: '';
-    flex: 1;
-    max-width: 60px;
-    height: 1px;
-    background: var(--beige-dark);
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+      rgba(0,0,0,0.25) 0%,
+      rgba(0,0,0,0) 25%,
+      rgba(0,0,0,0) 55%,
+      rgba(0,0,0,0.78) 100%);
+    pointer-events: none;
   }
-
-  .landing-date {
+  .card-front-top {
+    position: relative;
+    z-index: 2;
+    padding: 1.6rem 1.5rem 0;
+    text-align: center;
+  }
+  .wedding-date {
     font-family: 'Jost', sans-serif;
     font-weight: 300;
     font-size: 0.75rem;
-    letter-spacing: 0.25em;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: var(--text-light);
+    color: white;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.45);
   }
-
-  .landing-names {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(3.2rem, 14vw, 6.5rem);
-    line-height: 0.95;
-    color: var(--olive-dark);
-    letter-spacing: -0.01em;
+  .card-front-bottom {
+    position: relative;
+    z-index: 2;
+    padding: 1.5rem;
+    text-align: center;
   }
-
-  .landing-names em {
-    font-style: italic;
-    font-weight: 400;
-    color: var(--olive-dark);
+  /* Textos multiidioma en bucle */
+  .welcome-text {
+    position: relative;
+    height: 3.5rem;
+    margin-bottom: 1.8rem;
   }
-
-  /* & same color as names */
-  .landing-amp {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: normal;
-    font-weight: 300;
-    font-size: clamp(2rem, 8vw, 4rem);
-    color: var(--olive-dark);
-    display: block;
-    margin: 0.1em 0;
-  }
-
-  .landing-tagline {
-    margin-top: 2rem;
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    font-size: clamp(0.8rem, 3vw, 0.9rem);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--text-light);
-  }
-
-  .waiting-pulse {
+  .lang-item {
+    position: absolute;
+    inset: 0;
     display: flex;
-    gap: 6px;
+    align-items: center;
     justify-content: center;
-    margin-top: 3rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(2rem, 9vw, 3rem);
+    color: white;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    opacity: 0;
+    animation: fade-stay-fade 12.5s infinite;
+  }
+  .lang-1 { animation-delay: 0s; }
+  .lang-2 { animation-delay: 2.5s; }
+  .lang-3 { animation-delay: 5s; }
+  .lang-4 { animation-delay: 7.5s; }
+  .lang-5 { animation-delay: 10s; }
+
+  @keyframes fade-stay-fade {
+    0%   { opacity: 0; transform: translateY(6px); }
+    6%   { opacity: 1; transform: translateY(0); }
+    14%  { opacity: 1; transform: translateY(0); }
+    20%  { opacity: 0; transform: translateY(-6px); }
+    100% { opacity: 0; }
   }
 
-  .waiting-pulse span {
-    width: 6px;
-    height: 6px;
+  /* Botón bilingüe animado */
+  .memory-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--olive-dark);
+    color: var(--cream);
+    text-decoration: none;
+    padding: 0.85rem 1.5rem;
+    border-radius: 28px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.25s, transform 0.15s;
+    box-shadow: 0 6px 18px rgba(74,86,56,0.35);
+    border: none;
+  }
+  .memory-button:hover { background: var(--olive-mid); }
+  .memory-button:active { transform: translateY(1px); }
+
+  /* Wrapper de altura fija para que los dos textos se superpongan */
+  .btn-lang-wrap {
+    position: relative;
+    display: block;
+    height: 1.3em;
+    min-width: 180px;
+    text-align: center;
+  }
+  .btn-es, .btn-en {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .btn-es { animation: btn-fade 5s 0s infinite backwards; }
+  .btn-en { animation: btn-fade 5s 2.5s infinite backwards; }
+
+  @keyframes btn-fade {
+    0%       { opacity: 0; }
+    8%       { opacity: 1; }
+    44%      { opacity: 1; }
+    50%      { opacity: 0; }
+    100%     { opacity: 0; }
+  }
+
+  /* Card back: form */
+  .card-back {
+    background-color: var(--cream);
+    transform: rotateY(180deg) translateZ(1px);
+    -webkit-transform: rotateY(180deg) translateZ(1px);
+    display: flex;
+    flex-direction: column;
+    padding: 1.4rem 1.3rem 1.2rem;
+    overflow-y: auto;
+    pointer-events: none;
+  }
+  .card-back h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--olive-dark);
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  #memory-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .name-input {
+    width: 100%;
+    border: 1px solid var(--beige-mid);
+    border-radius: 10px;
+    padding: 0.7rem 0.9rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    background: white;
+    -webkit-appearance: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .name-input:focus {
+    outline: none;
+    border-color: var(--olive-light);
+    box-shadow: 0 0 0 3px rgba(138,154,106,0.15);
+  }
+
+  .editor-toolbar {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    margin-bottom: -0.3rem;
+  }
+  .toolbar-btn {
+    background: white;
+    border: 1px solid var(--beige-mid);
+    border-radius: 8px;
+    padding: 0.3rem 0.55rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .toolbar-btn:hover { background: var(--beige-light); }
+  .emoji-container { position: relative; }
+  .emoji-panel {
+    display: none;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background: white;
+    border: 1px solid var(--beige-mid);
+    border-radius: 10px;
+    padding: 0.4rem;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    z-index: 10;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 2px;
+    width: 220px;
+  }
+  .emoji-panel.show { display: grid; }
+  .emoji-panel button {
+    background: none;
+    border: none;
+    font-size: 1.05rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+  }
+  .emoji-panel button:hover { background: var(--beige-light); }
+
+  .editable {
+    min-height: 100px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid var(--beige-mid);
+    border-radius: 10px;
+    padding: 0.7rem 0.9rem;
+    background: white;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--text-dark);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .editable:focus {
+    outline: none;
+    border-color: var(--olive-light);
+    box-shadow: 0 0 0 3px rgba(138,154,106,0.15);
+  }
+  .editable[data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: var(--text-light);
+    font-style: italic;
+  }
+
+  .char-counter {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-align: right;
+    color: var(--text-light);
+    margin-top: -0.4rem;
+  }
+  .char-counter.over { color: #c0392b; }
+
+  .upload-section {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.2rem;
+  }
+  #upload-photo-button {
+    background: white;
+    border: 1px dashed var(--beige-dark);
+    color: var(--olive-dark);
+    border-radius: 10px;
+    padding: 0.5rem 0.9rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  #upload-photo-button:hover { background: var(--beige-light); border-color: var(--olive-light); }
+
+  #image-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .preview-thumb {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--beige-mid);
+  }
+  .preview-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .preview-thumb .remove {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 18px;
+    height: 18px;
+    background: #c0392b;
+    color: white;
+    border: none;
     border-radius: 50%;
-    background: var(--beige-dark);
-    animation: pulse-dot 1.4s ease-in-out infinite;
+    font-size: 0.7rem;
+    line-height: 18px;
+    text-align: center;
+    cursor: pointer;
+    padding: 0;
   }
 
-  .waiting-pulse span:nth-child(2) { animation-delay: 0.2s; }
-  .waiting-pulse span:nth-child(3) { animation-delay: 0.4s; }
+  .submit-button {
+    background: var(--olive-dark);
+    color: var(--cream);
+    border: none;
+    border-radius: 28px;
+    padding: 0.8rem 1.4rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+    margin-top: 0.4rem;
+  }
+  .submit-button:hover { background: var(--olive-mid); }
+  .submit-button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  @keyframes pulse-dot {
-    0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
-    40% { transform: scale(1.1); opacity: 1; }
+  .back-button {
+    background: transparent;
+    border: 1px solid var(--beige-dark);
+    color: var(--text-mid);
+    border-radius: 28px;
+    padding: 0.6rem 1.2rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 0.6rem;
+    transition: background 0.2s;
+  }
+  .back-button:hover { background: var(--beige-light); }
+
+  .confirmation-message {
+    display: none;
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+  .confirmation-message.visible { display: block; }
+  .confirmation-icon {
+    font-size: 3.4rem;
+    color: var(--olive-dark);
+    margin-bottom: 0.8rem;
+    line-height: 1;
+  }
+  .confirmation-message h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 1.6rem;
+    color: var(--olive-dark);
+    margin-bottom: 0.4rem;
+  }
+  .confirmation-message p {
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    line-height: 1.5;
+    margin-bottom: 0.3rem;
+  }
+  .confirmation-message .en {
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 0.78rem;
   }
 
   /* ─── MAIN VIEW ─── */
@@ -158,10 +465,9 @@
   }
 
   .main-header {
-    padding: 1.5rem 1.5rem 0;
+    padding: 1.5rem 1.5rem 0.5rem;
     text-align: center;
   }
-
   .main-header h1 {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 300;
@@ -170,7 +476,6 @@
     color: var(--olive-dark);
     letter-spacing: 0.02em;
   }
-
   .main-header p {
     font-size: 0.7rem;
     letter-spacing: 0.2em;
@@ -179,20 +484,25 @@
     margin-top: 0.3rem;
   }
 
-  /* ─── POT SECTION ─── */
+  /* ─── POT (glass) ─── */
   .pot-section {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 1.2rem 1rem 0;
+    padding: 0.8rem 1rem 0;
     flex-shrink: 0;
   }
-
   .pot-wrapper {
     position: relative;
-    width: min(160px, 42vw);
+    width: min(220px, 56vw);
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
   }
-
+  .pot-wrapper.zoomed {
+    transform: scale(2.2);
+  }
+  @media (max-width: 480px) {
+    .pot-wrapper.zoomed { transform: scale(1.7); }
+  }
   .pot-svg {
     width: 100%;
     height: auto;
@@ -200,60 +510,14 @@
     overflow: visible;
   }
 
-  /* ─── LAYER LABELS ─── */
-  .layer-labels {
-    position: absolute;
-    top: 4%;
-    right: -105px;
-    bottom: 3%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding-bottom: 6%;
-  }
-
-  @media (max-width: 480px) {
-    .layer-labels { display: none; }
-  }
-
-  .layer-label {
-    display: flex;
-    align-items: flex-start;
-    gap: 6px;
-    opacity: 0;
-    transform: translateX(8px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    height: 14.5%;
-    padding-top: 2px;
-  }
-
-  .layer-label.visible { opacity: 1; transform: translateX(0); }
-
-  .layer-label-line {
-    width: 16px;
-    height: 1px;
-    background: var(--beige-dark);
-    flex-shrink: 0;
-    margin-top: 7px;
-  }
-
-  .layer-label-text {
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-light);
-    white-space: nowrap;
-  }
-
   /* ─── SPEECHES ─── */
   .speeches-section {
-    padding: 1.5rem;
+    padding: 1.5rem 1.5rem 2rem;
     flex: 1;
-    max-width: 680px;
+    max-width: 700px;
     width: 100%;
     margin: 0 auto;
   }
-
   .speeches-title {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 400;
@@ -266,16 +530,13 @@
     align-items: center;
     gap: 1rem;
   }
-
-  .speeches-title::before,
-  .speeches-title::after {
+  .speeches-title::before, .speeches-title::after {
     content: '';
     flex: 1;
     height: 1px;
     background: var(--beige-mid);
   }
 
-  /* ─── ACCORDION CARD ─── */
   .speech-card {
     background: white;
     border: 1px solid var(--beige-mid);
@@ -285,18 +546,15 @@
     transition: border-color 0.3s, box-shadow 0.3s;
     animation: card-in 0.4s ease forwards;
   }
-
   @keyframes card-in {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-
   .speech-card.expanded {
     border-color: var(--beige-dark);
     box-shadow: 0 2px 14px rgba(74,86,56,0.07);
   }
 
-  /* Header row */
   .speech-card-header {
     display: flex;
     align-items: center;
@@ -304,10 +562,10 @@
     padding: 0.75rem 1.1rem;
     gap: 0.75rem;
     min-height: 50px;
+    cursor: pointer;
+    user-select: none;
   }
-
   .speech-meta { flex: 1; min-width: 0; }
-
   .speech-speaker {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 600;
@@ -315,26 +573,25 @@
     color: var(--olive-dark);
     line-height: 1.2;
   }
-
   .speech-role {
     font-size: 0.65rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--text-light);
     margin-top: 0.15rem;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.35s ease, opacity 0.3s ease, margin-top 0.3s ease;
-    opacity: 0;
   }
-
-  .speech-card.expanded .speech-role {
-    max-height: 40px;
-    opacity: 1;
-    margin-top: 0.15rem;
+  .chevron {
+    width: 14px;
+    height: 14px;
+    border-right: 2px solid var(--text-light);
+    border-bottom: 2px solid var(--text-light);
+    transform: rotate(45deg);
+    transition: transform 0.3s;
+    flex-shrink: 0;
+    margin-right: 4px;
   }
+  .speech-card.expanded .chevron { transform: rotate(-135deg); margin-top: 6px; }
 
-  /* Language toggle — hidden when collapsed */
   .lang-toggle {
     display: flex;
     background: var(--beige-light);
@@ -347,12 +604,10 @@
     transition: opacity 0.3s ease;
     flex-shrink: 0;
   }
-
   .speech-card.expanded .lang-toggle {
     opacity: 1;
     pointer-events: auto;
   }
-
   .lang-btn {
     background: none;
     border: none;
@@ -367,32 +622,20 @@
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
   }
-
   .lang-btn.active {
     background: white;
     color: var(--olive-dark);
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   }
 
-  /* Accordion body */
   .speech-body-wrap {
     display: grid;
     grid-template-rows: 0fr;
     transition: grid-template-rows 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   }
-
-  .speech-card.expanded .speech-body-wrap {
-    grid-template-rows: 1fr;
-  }
-
+  .speech-card.expanded .speech-body-wrap { grid-template-rows: 1fr; }
   .speech-body-inner { overflow: hidden; }
-
-  .speech-divider {
-    height: 1px;
-    background: var(--beige-light);
-    margin: 0 1.1rem;
-  }
-
+  .speech-divider { height: 1px; background: var(--beige-light); margin: 0 1.1rem; }
   .speech-body {
     padding: 1rem 1.1rem 1.25rem;
     font-family: 'Jost', sans-serif;
@@ -401,7 +644,6 @@
     line-height: 1.78;
     color: var(--text-mid);
   }
-
   .speech-text { display: none; }
   .speech-text.active { display: block; }
 
@@ -410,7 +652,6 @@
     padding: 3rem 1rem;
     color: var(--text-light);
   }
-
   .empty-state svg {
     width: 36px;
     height: 36px;
@@ -418,10 +659,9 @@
     margin: 0 auto 1rem;
     display: block;
   }
-
   .empty-state p { font-size: 0.82rem; letter-spacing: 0.08em; }
 
-  /* Particle canvas */
+  /* Particles */
   #particle-canvas {
     position: fixed;
     top: 0; left: 0;
@@ -430,249 +670,123 @@
     z-index: 999;
   }
 
-  /* ─── MESSAGE CTA (landing button) ─── */
-  .message-cta {
-    margin-top: 2.5rem;
-    background: var(--olive-dark);
-    color: var(--cream);
-    border: none;
-    border-radius: 28px;
-    padding: 0.85rem 1.6rem;
-    font-family: 'Jost', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 400;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.25s, transform 0.15s, box-shadow 0.25s;
-    box-shadow: 0 2px 10px rgba(74,86,56,0.18);
-  }
-
-  .message-cta:hover { background: var(--olive-mid); }
-  .message-cta:active { transform: translateY(1px); }
-
-  /* ─── COMPOSE VIEW ─── */
-  #compose-view {
-    display: none;
-    min-height: 100vh;
-    flex-direction: column;
+  /* Ceremony overlay */
+  #ceremony-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    transition: background 0.6s ease;
+    z-index: 800;
+    pointer-events: none;
+    display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--cream);
-    position: relative;
-    overflow: hidden;
-    padding: 2rem 1.25rem;
   }
-
-  #compose-view::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 80% 60% at 50% 110%, rgba(138,154,106,0.18) 0%, transparent 70%),
-      radial-gradient(ellipse 60% 40% at 20% 0%, rgba(201,184,154,0.25) 0%, transparent 60%);
+  #ceremony-overlay.visible {
+    background: rgba(0,0,0,0.60);
+    pointer-events: auto;
+  }
+  #ceremony-layer-name {
+    position: fixed;
+    bottom: 8%;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    color: white;
+    letter-spacing: 0.05em;
+    z-index: 901;
     pointer-events: none;
-  }
-
-  .compose-inner {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 460px;
     text-align: center;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  }
+  #ceremony-layer-name.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
   }
 
-  .compose-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-style: italic;
-    font-size: clamp(1.6rem, 6vw, 2.2rem);
-    line-height: 1.2;
-    color: var(--olive-dark);
-    margin-bottom: 0.4rem;
-  }
 
-  .compose-amp { font-style: normal; }
-
-  .compose-subtitle {
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-light);
-    margin-bottom: 2rem;
-  }
-
-  .compose-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
-    text-align: left;
-  }
-
-  .compose-form label {
-    font-family: 'Jost', sans-serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--text-light);
-    margin-bottom: 0.35rem;
-    display: block;
-  }
-
-  .compose-form input,
-  .compose-form textarea {
-    width: 100%;
-    background: white;
-    border: 1px solid var(--beige-mid);
-    border-radius: 10px;
-    padding: 0.8rem 0.95rem;
-    font-family: 'Jost', sans-serif;
-    font-size: 0.95rem;
-    color: var(--text-dark);
-    transition: border-color 0.2s, box-shadow 0.2s;
-    -webkit-appearance: none;
-  }
-
-  .compose-form input:focus,
-  .compose-form textarea:focus {
-    outline: none;
-    border-color: var(--olive-light);
-    box-shadow: 0 0 0 3px rgba(138,154,106,0.15);
-  }
-
-  .compose-form textarea {
-    resize: vertical;
-    min-height: 120px;
-    line-height: 1.55;
-    font-family: 'Jost', sans-serif;
-  }
-
-  .compose-buttons {
-    display: flex;
-    gap: 0.6rem;
-    margin-top: 1rem;
-  }
-
-  .compose-btn {
-    flex: 1;
-    border: none;
-    border-radius: 28px;
-    padding: 0.85rem 1rem;
-    font-family: 'Jost', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s, transform 0.15s, opacity 0.2s;
-  }
-
-  .compose-btn.primary {
-    background: var(--olive-dark);
-    color: var(--cream);
-  }
-  .compose-btn.primary:hover { background: var(--olive-mid); }
-  .compose-btn.primary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  .compose-btn.secondary {
-    background: transparent;
-    color: var(--text-mid);
-    border: 1px solid var(--beige-dark);
-  }
-  .compose-btn.secondary:hover { background: var(--beige-light); }
-
-  .compose-btn:active { transform: translateY(1px); }
-
-  .compose-success {
-    display: none;
-    margin-top: 2rem;
-    padding: 1.5rem;
-    background: white;
-    border: 1px solid var(--beige-mid);
-    border-radius: 12px;
-    text-align: center;
-  }
-
-  .compose-success.visible { display: block; }
-
-  .compose-success-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 1.4rem;
-    color: var(--olive-dark);
-    margin-bottom: 0.3rem;
-  }
-
-  .compose-success-sub {
-    font-size: 0.7rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--text-light);
-  }
 </style>
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<!-- Image compression -->
+<script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
 </head>
 <body>
 
 <canvas id="particle-canvas"></canvas>
+<div id="ceremony-overlay"></div>
+<div id="ceremony-layer-name"></div>
 
-<!-- ─── LANDING PAGE ─── -->
+<!-- ─── LANDING (flip card) ─── -->
 <div id="landing">
-  <div class="landing-inner">
-    <div class="landing-date-line">
-      <span class="landing-date">06 · 06 · 2026</span>
-    </div>
-    <div class="landing-names">
-      <em>Manu</em>
-      <span class="landing-amp">&amp;</span>
-      <em>Dani</em>
-    </div>
-    <p class="landing-tagline">Bienvenidos a nuestra boda · Welcome to our wedding</p>
-    <div class="waiting-pulse">
-      <span></span><span></span><span></span>
-    </div>
-    <button id="open-message-btn" class="message-cta">
-      Enviar mensaje a los novios · Send a message to the couple
-    </button>
-  </div>
-</div>
-
-<!-- ─── COMPOSE MESSAGE VIEW ─── -->
-<div id="compose-view">
-  <div class="compose-inner">
-    <h2 class="compose-title">Un mensaje para Manu <span class="compose-amp">&amp;</span> Dani</h2>
-    <p class="compose-subtitle">A message for Manu &amp; Dani</p>
-
-    <form class="compose-form" id="compose-form" autocomplete="off">
-      <div>
-        <label for="msg-name">Tu nombre · Your name</label>
-        <input id="msg-name" name="name" type="text" maxlength="60" required>
+  <main class="welcome-section">
+    <div class="card" id="flip-card">
+      <!-- FRONT -->
+      <div class="card-face card-front">
+        <div class="card-front-top">
+          <p class="wedding-date">06 · 06 · 2026</p>
+          <div class="welcome-text">
+            <span class="lang-item lang-1">Bienvenidos</span>
+            <span class="lang-item lang-2">Welcome</span>
+            <span class="lang-item lang-3">Bienvenue</span>
+            <span class="lang-item lang-4">Willkommen</span>
+            <span class="lang-item lang-5">स्वागत छ</span>
+          </div>
+        </div>
+        <div class="card-front-bottom">
+          <button type="button" class="memory-button" id="open-message-btn">
+            <span class="btn-lang-wrap">
+              <span class="btn-es">Déjanos un mensaje</span>
+              <span class="btn-en">Leave a message</span>
+            </span>
+          </button>
+        </div>
       </div>
-      <div>
-        <label for="msg-text">Tu mensaje · Your message</label>
-        <textarea id="msg-text" name="message" maxlength="500" required></textarea>
-      </div>
-      <div class="compose-buttons">
-        <button type="button" class="compose-btn secondary" id="cancel-msg-btn">
-          Cancelar · Cancel
-        </button>
-        <button type="submit" class="compose-btn primary" id="send-msg-btn">
-          Enviar · Send
-        </button>
-      </div>
-    </form>
 
-    <div class="compose-success" id="compose-success">
-      <div class="compose-success-title">¡Gracias!</div>
-      <div class="compose-success-sub">Mensaje enviado · Message sent</div>
+      <!-- BACK -->
+      <div class="card-face card-back">
+        <div id="confirmation-message" class="confirmation-message">
+          <div class="confirmation-icon">✓</div>
+          <h3>¡Mensaje enviado!</h3>
+          <p>Gracias por formar parte de nuestro día.</p>
+          <p class="en">Message sent! Thank you for being part of our day.</p>
+        </div>
+
+        <div id="form-wrap">
+          <h2>Un mensaje · A message</h2>
+          <form id="memory-form" autocomplete="off">
+            <input type="text" id="guest-name" class="name-input" placeholder="Tu nombre · Your name" maxlength="60" required>
+
+            <div class="editor-toolbar">
+              <div class="emoji-container">
+                <button type="button" id="emoji-btn" class="toolbar-btn" title="Añadir emoji">😊</button>
+                <div id="emoji-panel" class="emoji-panel"></div>
+              </div>
+            </div>
+
+            <div id="message-box" class="editable" contenteditable="true" spellcheck="false" data-placeholder="Tu mensaje · Your message"></div>
+            <div id="char-counter" class="char-counter">0 / 500</div>
+
+            <div class="upload-section">
+              <button type="button" id="upload-photo-button" title="Añadir foto">+ Foto · Photo</button>
+              <input type="file" id="photo-upload" accept="image/*" hidden multiple>
+              <div id="image-preview-container"></div>
+            </div>
+
+            <button type="submit" class="submit-button" id="send-msg-btn">Enviar · Send</button>
+            <button type="button" class="back-button" id="back-btn">Volver · Back</button>
+          </form>
+        </div>
+      </div>
     </div>
-  </div>
+  </main>
 </div>
 
 <!-- ─── MAIN VIEW ─── -->
@@ -683,237 +797,177 @@
   </div>
 
   <div class="pot-section">
-    <div class="pot-wrapper">
-
+    <div class="pot-wrapper" id="pot-wrapper">
       <!--
-        RUSTIC TERRACOTTA POT SVG
-        ViewBox 160x300. Tall, slightly tapered cylinder.
-        Colour palette: warm terracotta / barro rústico.
-        5 layers + ~20% empty headroom at the top.
-
-        Layer Y positions inside the body (y=28 rim … y=282 base):
-          Total inner height ≈ 254px
-          Each layer ≈ 42px tall, gap of ~12px at top (headroom)
-          rocks   : y 240–282
-          soil    : y 198–240
-          coconut : y 156–198
-          perlite : y 114–156
-          pine    : y  72–114
-          headroom:  28– 72  (empty ~44px ≈ 17%)
+        GLASS POT ("tumbler" style, based on user reference)
+        viewBox 240 x 220. Wider than tall.
+        Inner content area (where layers fall): x 24..216, y 32..198
+        Inner height ≈ 166 split among 6 layers (~27px each).
+        From bottom (y=198) up:
+          rocks   : y 171–198 (27)
+          soil    : y 144–171
+          perlite : y 117–144
+          coconut : y 90–117
+          pine    : y 63–90
+          seeds   : y 36–63
+          headroom: 32–36 (very small, just under engraving)
       -->
-      <svg id="pot-svg" class="pot-svg" viewBox="0 0 160 310" xmlns="http://www.w3.org/2000/svg">
+      <svg id="pot-svg" class="pot-svg" viewBox="0 0 240 220" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <!-- Clip to inner cavity of the pot -->
           <clipPath id="pot-inner-clip">
-            <!-- Rim ellipse -->
-            <ellipse cx="80" cy="28" rx="62" ry="7"/>
-            <!-- Straight-ish walls tapering slightly inward at base -->
-            <path d="M 18 28 L 14 280 Q 14 290 80 290 Q 146 290 146 280 L 142 28 Z"/>
+            <path d="M 24 32 L 22 198 Q 22 204 30 204 L 210 204 Q 218 204 218 198 L 216 32 Z"/>
           </clipPath>
-
-          <!-- Terracotta body gradient: left-face darker, center warmer, right edge slightly lighter -->
-          <linearGradient id="potBody" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%"   stop-color="#8c4e2a"/>
-            <stop offset="18%"  stop-color="#b86840"/>
-            <stop offset="50%"  stop-color="#c97848"/>
-            <stop offset="78%"  stop-color="#b06038"/>
-            <stop offset="100%" stop-color="#7a3e20"/>
+          <linearGradient id="glassWall" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"  stop-color="rgba(255,255,255,0.55)"/>
+            <stop offset="50%" stop-color="rgba(255,255,255,0.08)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0.55)"/>
           </linearGradient>
-
-          <!-- Rim top gradient -->
-          <linearGradient id="rimTop" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%"   stop-color="#7a3e20"/>
-            <stop offset="40%"  stop-color="#d4906a"/>
-            <stop offset="100%" stop-color="#8c4e2a"/>
-          </linearGradient>
-
-          <!-- Shadow at very bottom -->
-          <linearGradient id="potShadow" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%"   stop-color="rgba(0,0,0,0)"/>
-            <stop offset="100%" stop-color="rgba(0,0,0,0.22)"/>
-          </linearGradient>
-
-          <!-- Subtle inner-wall vignette so layers look like they're inside -->
-          <linearGradient id="innerVignette" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%"   stop-color="rgba(0,0,0,0.18)"/>
-            <stop offset="12%"  stop-color="rgba(0,0,0,0.04)"/>
-            <stop offset="50%"  stop-color="rgba(0,0,0,0)"/>
-            <stop offset="88%"  stop-color="rgba(0,0,0,0.04)"/>
-            <stop offset="100%" stop-color="rgba(0,0,0,0.18)"/>
+          <linearGradient id="glassInner" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stop-color="rgba(180,200,210,0.18)"/>
+            <stop offset="50%"  stop-color="rgba(255,255,255,0.0)"/>
+            <stop offset="100%" stop-color="rgba(180,200,210,0.18)"/>
           </linearGradient>
         </defs>
 
-        <!-- ── LAYER FILLS (clipped inside pot, bottom → top) ── -->
+        <!-- Drop shadow under base -->
+        <ellipse cx="120" cy="210" rx="92" ry="6" fill="rgba(0,0,0,0.12)"/>
 
-        <!-- Layer 1: Rocks — y 240-290 -->
-        <g id="layer-rocks-group" clip-path="url(#pot-inner-clip)" opacity="0" style="transition:opacity 0.3s ease">
-          <rect x="0" y="240" width="160" height="55" fill="#8c7a6e"/>
-          <ellipse cx="26"  cy="252" rx="10" ry="7"  fill="#7a6a5e"/>
-          <ellipse cx="46"  cy="258" rx="8"  ry="6"  fill="#9a8878"/>
-          <ellipse cx="65"  cy="248" rx="11" ry="7"  fill="#7a6a5e"/>
-          <ellipse cx="84"  cy="255" rx="9"  ry="6"  fill="#a09080"/>
-          <ellipse cx="104" cy="250" rx="10" ry="7"  fill="#7a6a5e"/>
-          <ellipse cx="122" cy="257" rx="8"  ry="6"  fill="#9a8878"/>
-          <ellipse cx="140" cy="251" rx="9"  ry="6"  fill="#7a6a5e"/>
-          <ellipse cx="35"  cy="270" rx="9"  ry="5"  fill="#9a8878"/>
-          <ellipse cx="70"  cy="272" rx="10" ry="5"  fill="#7a6a5e"/>
-          <ellipse cx="108" cy="270" rx="8"  ry="5"  fill="#9a8878"/>
-          <ellipse cx="136" cy="268" rx="7"  ry="5"  fill="#7a6a5e"/>
+        <!-- Glass body fill (subtle inner tint) -->
+        <path d="M 24 32 L 22 198 Q 22 204 30 204 L 210 204 Q 218 204 218 198 L 216 32 Z"
+              fill="url(#glassInner)"/>
+
+        <!-- ── LAYERS (clipped inside glass) ── -->
+
+        <!-- Layer 1: Rocks -->
+        <g id="layer-rocks-group" clip-path="url(#pot-inner-clip)" opacity="0" style="transition:opacity 0.4s ease">
+          <rect x="0" y="171" width="240" height="33" fill="#8c7a6e"/>
+          <ellipse cx="40"  cy="183" rx="11" ry="7" fill="#7a6a5e"/>
+          <ellipse cx="68"  cy="189" rx="9"  ry="6" fill="#9a8878"/>
+          <ellipse cx="98"  cy="180" rx="12" ry="7" fill="#7a6a5e"/>
+          <ellipse cx="128" cy="187" rx="10" ry="6" fill="#a09080"/>
+          <ellipse cx="158" cy="181" rx="11" ry="7" fill="#7a6a5e"/>
+          <ellipse cx="186" cy="188" rx="9"  ry="6" fill="#9a8878"/>
+          <ellipse cx="208" cy="183" rx="9"  ry="6" fill="#7a6a5e"/>
+          <ellipse cx="50"  cy="198" rx="9"  ry="5" fill="#9a8878"/>
+          <ellipse cx="90"  cy="200" rx="10" ry="5" fill="#7a6a5e"/>
+          <ellipse cx="138" cy="199" rx="9"  ry="5" fill="#9a8878"/>
+          <ellipse cx="180" cy="200" rx="9"  ry="5" fill="#7a6a5e"/>
         </g>
 
-        <!-- Layer 2: Soil — y 198-240 -->
-        <g id="layer-soil-group" clip-path="url(#pot-inner-clip)" opacity="0" style="transition:opacity 0.3s ease">
-          <rect x="0" y="198" width="160" height="44" fill="#7a5c3e"/>
-          <rect x="0" y="198" width="160" height="4"  fill="#8a6c4e" opacity="0.5"/>
-          <circle cx="30"  cy="213" r="2"   fill="#5a3c1e" opacity="0.55"/>
-          <circle cx="55"  cy="207" r="1.5" fill="#6a4c2e" opacity="0.5"/>
-          <circle cx="80"  cy="215" r="2"   fill="#5a3c1e" opacity="0.55"/>
-          <circle cx="106" cy="209" r="1.8" fill="#6a4c2e" opacity="0.5"/>
-          <circle cx="132" cy="214" r="2"   fill="#5a3c1e" opacity="0.55"/>
-          <circle cx="148" cy="208" r="1.5" fill="#6a4c2e" opacity="0.5"/>
-          <circle cx="42"  cy="228" r="1.5" fill="#5a3c1e" opacity="0.45"/>
-          <circle cx="94"  cy="230" r="1.8" fill="#6a4c2e" opacity="0.45"/>
-          <circle cx="140" cy="227" r="1.5" fill="#5a3c1e" opacity="0.45"/>
+        <!-- Layer 2: Soil -->
+        <g id="layer-soil-group" clip-path="url(#pot-inner-clip)" opacity="0" style="transition:opacity 0.4s ease">
+          <rect x="0" y="144" width="240" height="28" fill="#7a5c3e"/>
+          <rect x="0" y="144" width="240" height="3"  fill="#8a6c4e" opacity="0.5"/>
+          <circle cx="40"  cy="158" r="2"   fill="#5a3c1e" opacity="0.55"/>
+          <circle cx="68"  cy="152" r="1.5" fill="#6a4c2e" opacity="0.5"/>
+          <circle cx="100" cy="160" r="2"   fill="#5a3c1e" opacity="0.55"/>
+          <circle cx="130" cy="154" r="1.8" fill="#6a4c2e" opacity="0.5"/>
+          <circle cx="160" cy="159" r="2"   fill="#5a3c1e" opacity="0.55"/>
+          <circle cx="190" cy="153" r="1.5" fill="#6a4c2e" opacity="0.5"/>
+          <circle cx="55"  cy="167" r="1.5" fill="#5a3c1e" opacity="0.45"/>
+          <circle cx="115" cy="168" r="1.8" fill="#6a4c2e" opacity="0.45"/>
+          <circle cx="175" cy="166" r="1.5" fill="#5a3c1e" opacity="0.45"/>
         </g>
 
-        <!-- Layer 3: Coconut fiber — y 156-198 -->
-        <g id="layer-coconut-group" clip-path="url(#pot-inner-clip)" opacity="0" style="transition:opacity 0.3s ease">
-          <rect x="0" y="156" width="160" height="44" fill="#b8924a"/>
-          <line x1="14"  y1="163" x2="38"  y2="198" stroke="#a07838" stroke-width="1.3" opacity="0.6"/>
-          <line x1="32"  y1="157" x2="60"  y2="198" stroke="#c8a258" stroke-width="1"   opacity="0.5"/>
-          <line x1="55"  y1="156" x2="78"  y2="198" stroke="#a07838" stroke-width="1.3" opacity="0.6"/>
-          <line x1="74"  y1="157" x2="100" y2="198" stroke="#c8a258" stroke-width="1"   opacity="0.5"/>
-          <line x1="96"  y1="156" x2="120" y2="198" stroke="#a07838" stroke-width="1.3" opacity="0.6"/>
-          <line x1="116" y1="157" x2="142" y2="198" stroke="#c8a258" stroke-width="1"   opacity="0.5"/>
-          <line x1="138" y1="156" x2="158" y2="195" stroke="#a07838" stroke-width="1.3" opacity="0.6"/>
+        <!-- Layer 3: Perlite -->
+        <g id="layer-perlite-group" clip-path="url(#pot-inner-clip)" opacity="0" style="transition:opacity 0.4s ease">
+          <rect x="0" y="117" width="240" height="28" fill="#d8d3cb"/>
+          <circle cx="34"  cy="125" r="5"   fill="white" opacity="0.92"/>
+          <circle cx="56"  cy="135" r="4"   fill="white" opacity="0.85"/>
+          <circle cx="78"  cy="123" r="5.5" fill="white" opacity="0.92"/>
+          <circle cx="100" cy="137" r="4"   fill="white" opacity="0.85"/>
+          <circle cx="120" cy="124" r="5"   fill="white" opacity="0.9"/>
+          <circle cx="142" cy="135" r="4.5" fill="white" opacity="0.85"/>
+          <circle cx="164" cy="125" r="5"   fill="white" opacity="0.92"/>
+          <circle cx="186" cy="136" r="4"   fill="white" opacity="0.85"/>
+          <circle cx="206" cy="124" r="4.5" fill="white" opacity="0.85"/>
+          <circle cx="44"  cy="142" r="3.5" fill="white" opacity="0.8"/>
+          <circle cx="92"  cy="140" r="4"   fill="white" opacity="0.82"/>
+          <circle cx="148" cy="141" r="3.5" fill="white" opacity="0.8"/>
+          <circle cx="196" cy="140" r="4"   fill="white" opacity="0.82"/>
         </g>
 
-        <!-- Layer 4: Perlite — y 114-156 -->
-        <g id="layer-perlite-group" clip-path="url(#pot-inner-clip)" opacity="0" style="transition:opacity 0.3s ease">
-          <rect x="0" y="114" width="160" height="44" fill="#d8d3cb"/>
-          <circle cx="22"  cy="126" r="5"   fill="white" opacity="0.9"/>
-          <circle cx="38"  cy="136" r="4"   fill="white" opacity="0.85"/>
-          <circle cx="54"  cy="122" r="5.5" fill="white" opacity="0.9"/>
-          <circle cx="70"  cy="138" r="4"   fill="white" opacity="0.85"/>
-          <circle cx="84"  cy="124" r="5"   fill="white" opacity="0.9"/>
-          <circle cx="100" cy="135" r="4.5" fill="white" opacity="0.85"/>
-          <circle cx="116" cy="125" r="5"   fill="white" opacity="0.9"/>
-          <circle cx="132" cy="136" r="4"   fill="white" opacity="0.85"/>
-          <circle cx="148" cy="122" r="4.5" fill="white" opacity="0.85"/>
-          <circle cx="30"  cy="147" r="4"   fill="white" opacity="0.8"/>
-          <circle cx="64"  cy="149" r="4.5" fill="white" opacity="0.82"/>
-          <circle cx="96"  cy="148" r="4"   fill="white" opacity="0.8"/>
-          <circle cx="126" cy="149" r="4.5" fill="white" opacity="0.82"/>
+        <!-- Layer 4: Coconut fiber -->
+        <g id="layer-coconut-group" clip-path="url(#pot-inner-clip)" opacity="0" style="transition:opacity 0.4s ease">
+          <rect x="0" y="90" width="240" height="28" fill="#b8924a"/>
+          <line x1="22"  y1="96"  x2="50"  y2="118" stroke="#a07838" stroke-width="1.3" opacity="0.6"/>
+          <line x1="46"  y1="91"  x2="80"  y2="118" stroke="#c8a258" stroke-width="1"   opacity="0.5"/>
+          <line x1="78"  y1="90"  x2="106" y2="118" stroke="#a07838" stroke-width="1.3" opacity="0.6"/>
+          <line x1="106" y1="92"  x2="138" y2="118" stroke="#c8a258" stroke-width="1"   opacity="0.5"/>
+          <line x1="138" y1="90"  x2="170" y2="118" stroke="#a07838" stroke-width="1.3" opacity="0.6"/>
+          <line x1="166" y1="92"  x2="200" y2="118" stroke="#c8a258" stroke-width="1"   opacity="0.5"/>
+          <line x1="200" y1="90"  x2="220" y2="115" stroke="#a07838" stroke-width="1.3" opacity="0.6"/>
         </g>
 
-        <!-- Layer 5: Pine bark — y 72-114 -->
-        <g id="layer-pine-group" clip-path="url(#pot-inner-clip)" opacity="0" style="transition:opacity 0.3s ease">
-          <rect x="0" y="72" width="160" height="44" fill="#8b6035"/>
-          <rect x="16"  y="76"  width="16" height="10" rx="2" fill="#6b4820" opacity="0.85"/>
-          <rect x="36"  y="80"  width="20" height="9"  rx="2" fill="#9b7040" opacity="0.85"/>
-          <rect x="60"  y="74"  width="16" height="11" rx="2" fill="#6b4820" opacity="0.85"/>
-          <rect x="80"  y="79"  width="18" height="9"  rx="2" fill="#9b7040" opacity="0.85"/>
-          <rect x="102" y="75"  width="16" height="10" rx="2" fill="#6b4820" opacity="0.85"/>
-          <rect x="122" y="80"  width="18" height="9"  rx="2" fill="#9b7040" opacity="0.85"/>
-          <rect x="22"  y="92"  width="18" height="9"  rx="2" fill="#9b7040" opacity="0.85"/>
-          <rect x="46"  y="93"  width="16" height="9"  rx="2" fill="#6b4820" opacity="0.85"/>
-          <rect x="68"  y="91"  width="20" height="10" rx="2" fill="#9b7040" opacity="0.85"/>
-          <rect x="94"  y="92"  width="16" height="9"  rx="2" fill="#6b4820" opacity="0.85"/>
-          <rect x="114" y="91"  width="18" height="10" rx="2" fill="#9b7040" opacity="0.85"/>
-          <rect x="136" y="93"  width="14" height="9"  rx="2" fill="#6b4820" opacity="0.85"/>
+        <!-- Layer 5: Pine bark -->
+        <g id="layer-pine-group" clip-path="url(#pot-inner-clip)" opacity="0" style="transition:opacity 0.4s ease">
+          <rect x="0" y="63" width="240" height="28" fill="#8b6035"/>
+          <rect x="26"  y="67"  width="22" height="9"  rx="2" fill="#6b4820" opacity="0.85"/>
+          <rect x="54"  y="71"  width="24" height="9"  rx="2" fill="#9b7040" opacity="0.85"/>
+          <rect x="86"  y="65"  width="22" height="11" rx="2" fill="#6b4820" opacity="0.85"/>
+          <rect x="116" y="70"  width="24" height="9"  rx="2" fill="#9b7040" opacity="0.85"/>
+          <rect x="148" y="66"  width="22" height="10" rx="2" fill="#6b4820" opacity="0.85"/>
+          <rect x="178" y="71"  width="24" height="9"  rx="2" fill="#9b7040" opacity="0.85"/>
+          <rect x="36"  y="82"  width="22" height="9"  rx="2" fill="#9b7040" opacity="0.85"/>
+          <rect x="68"  y="83"  width="22" height="9"  rx="2" fill="#6b4820" opacity="0.85"/>
+          <rect x="102" y="81"  width="24" height="10" rx="2" fill="#9b7040" opacity="0.85"/>
+          <rect x="138" y="82"  width="22" height="9"  rx="2" fill="#6b4820" opacity="0.85"/>
+          <rect x="168" y="81"  width="24" height="10" rx="2" fill="#9b7040" opacity="0.85"/>
+          <rect x="200" y="83"  width="18" height="9"  rx="2" fill="#6b4820" opacity="0.85"/>
         </g>
 
-        <!-- Inner side vignette (depth effect, on top of layers but under walls) -->
-        <rect x="14" y="28" width="132" height="262" fill="url(#innerVignette)" clip-path="url(#pot-inner-clip)"/>
+        <!-- Layer 6: Seeds (NEW) -->
+        <g id="layer-seeds-group" clip-path="url(#pot-inner-clip)" opacity="0" style="transition:opacity 0.4s ease">
+          <rect x="0" y="36" width="240" height="28" fill="#c9b89a"/>
+          <ellipse cx="36"  cy="44" rx="3"   ry="1.6" fill="#6b4820"/>
+          <ellipse cx="58"  cy="51" rx="2.5" ry="1.4" fill="#8b6035"/>
+          <ellipse cx="82"  cy="46" rx="3"   ry="1.6" fill="#a07838"/>
+          <ellipse cx="106" cy="52" rx="2.5" ry="1.4" fill="#6b4820"/>
+          <ellipse cx="130" cy="45" rx="3"   ry="1.6" fill="#8b6035"/>
+          <ellipse cx="156" cy="51" rx="2.5" ry="1.4" fill="#a07838"/>
+          <ellipse cx="178" cy="46" rx="3"   ry="1.6" fill="#6b4820"/>
+          <ellipse cx="202" cy="52" rx="2.5" ry="1.4" fill="#8b6035"/>
+          <ellipse cx="46"  cy="58" rx="2.5" ry="1.4" fill="#a07838"/>
+          <ellipse cx="74"  cy="60" rx="3"   ry="1.6" fill="#6b4820"/>
+          <ellipse cx="100" cy="58" rx="2.5" ry="1.4" fill="#8b6035"/>
+          <ellipse cx="124" cy="60" rx="3"   ry="1.6" fill="#a07838"/>
+          <ellipse cx="150" cy="58" rx="2.5" ry="1.4" fill="#6b4820"/>
+          <ellipse cx="174" cy="60" rx="3"   ry="1.6" fill="#8b6035"/>
+          <ellipse cx="196" cy="58" rx="2.5" ry="1.4" fill="#a07838"/>
+        </g>
 
-        <!-- ── POT WALLS (terracotta, drawn over layers) ── -->
+        <!-- Glass walls (drawn over layers, semi-transparent) -->
+        <path d="M 24 32 L 22 198 Q 22 204 30 204 L 210 204 Q 218 204 218 198 L 216 32"
+              fill="none" stroke="url(#glassWall)" stroke-width="2.5" stroke-linejoin="round"/>
 
-        <!-- Main body — left wall -->
-        <path d="M 18 28 L 14 280 Q 14 290 22 292" stroke="none" fill="none"/>
+        <!-- Outer subtle outline -->
+        <path d="M 24 32 L 22 198 Q 22 204 30 204 L 210 204 Q 218 204 218 198 L 216 32"
+              fill="none" stroke="rgba(120,140,150,0.35)" stroke-width="0.6"/>
 
-        <!-- Full pot body outline with terracotta fill (walls only, semi-masked so layers show through middle) -->
-        <!-- Left wall thick strip -->
-        <path d="M 18 27 L 14 282 Q 14 292 80 293 Q 146 292 146 282 L 142 27 Z"
-              fill="none"
-              stroke="url(#potBody)"
-              stroke-width="13"
-              stroke-linejoin="round"/>
+        <!-- Top rim (open) -->
+        <ellipse cx="120" cy="32" rx="96" ry="5"
+                 fill="none" stroke="rgba(120,140,150,0.4)" stroke-width="0.8"/>
+        <ellipse cx="120" cy="32" rx="96" ry="5"
+                 fill="rgba(255,255,255,0.06)"/>
 
-        <!-- Solid wall fill left -->
-        <path d="M 18 27 L 14 282 Q 14 292 26 293 L 26 27 Z" fill="url(#potBody)"/>
-        <!-- Solid wall fill right -->
-        <path d="M 142 27 L 146 282 Q 146 292 134 293 L 134 27 Z" fill="url(#potBody)"/>
+        <!-- Base inner highlight -->
+        <ellipse cx="120" cy="204" rx="90" ry="2.5" fill="rgba(255,255,255,0.18)"/>
 
-        <!-- Outer pot outline stroke -->
-        <path d="M 18 28 L 14 282 Q 14 292 80 293 Q 146 292 146 282 L 142 28"
-              fill="none"
-              stroke="#6a3018"
-              stroke-width="1.4"
-              stroke-linejoin="round"/>
+        <!-- Glass reflections -->
+        <path d="M 36 50 L 32 190" stroke="rgba(255,255,255,0.55)" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
+        <path d="M 46 60 L 44 130" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M 200 50 L 204 130" stroke="rgba(255,255,255,0.25)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
 
-        <!-- Bottom base ellipse -->
-        <ellipse cx="80" cy="290" rx="66" ry="7" fill="#9a5830" stroke="#6a3018" stroke-width="1.2"/>
-        <!-- Shadow on base -->
-        <ellipse cx="80" cy="290" rx="66" ry="7" fill="url(#potShadow)"/>
-
-        <!-- Rim collar (top band — slightly wider, like a real terracotta rim) -->
-        <path d="M 12 22 Q 12 14 80 14 Q 148 14 148 22 L 145 32 Q 145 36 80 36 Q 15 36 15 32 Z"
-              fill="#b86040" stroke="#6a3018" stroke-width="1.2"/>
-        <!-- Rim top ellipse highlight -->
-        <ellipse cx="80" cy="14" rx="68" ry="8" fill="#d09070" stroke="#6a3018" stroke-width="1"/>
-        <!-- Rim inner shadow (opening) -->
-        <ellipse cx="80" cy="28" rx="62" ry="7" fill="#3a1a08" opacity="0.45"/>
-        <!-- Rim inner highlight arc -->
-        <path d="M 32 25 Q 80 20 128 25" stroke="rgba(220,160,120,0.5)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-
-        <!-- Left wall sheen -->
-        <path d="M 20 30 L 17 270" stroke="rgba(220,140,80,0.35)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-        <path d="M 30 30 L 27 270" stroke="rgba(255,180,120,0.15)" stroke-width="2" fill="none" stroke-linecap="round"/>
-
-        <!-- Right subtle reflection -->
-        <path d="M 140 30 L 143 270" stroke="rgba(80,30,10,0.25)" stroke-width="3" fill="none" stroke-linecap="round"/>
-
-        <!-- Tiny texture lines on body (rustic barro feel) -->
-        <line x1="16" y1="90"  x2="16" y2="110" stroke="rgba(100,40,15,0.25)" stroke-width="0.8"/>
-        <line x1="16" y1="150" x2="16" y2="170" stroke="rgba(100,40,15,0.2)"  stroke-width="0.8"/>
-        <line x1="16" y1="210" x2="16" y2="230" stroke="rgba(100,40,15,0.2)"  stroke-width="0.8"/>
-        <line x1="144" y1="100" x2="144" y2="120" stroke="rgba(60,20,5,0.2)"  stroke-width="0.8"/>
-        <line x1="144" y1="180" x2="144" y2="200" stroke="rgba(60,20,5,0.2)"  stroke-width="0.8"/>
       </svg>
-
-      <!-- Desktop labels -->
-      <div class="layer-labels">
-        <div class="layer-label" id="label-pine">
-          <div class="layer-label-line"></div>
-          <span class="layer-label-text">Cortezas · Bark</span>
-        </div>
-        <div class="layer-label" id="label-perlite">
-          <div class="layer-label-line"></div>
-          <span class="layer-label-text">Perlita · Perlite</span>
-        </div>
-        <div class="layer-label" id="label-coconut">
-          <div class="layer-label-line"></div>
-          <span class="layer-label-text">Fibra coco · Coco fiber</span>
-        </div>
-        <div class="layer-label" id="label-soil">
-          <div class="layer-label-line"></div>
-          <span class="layer-label-text">Tierra · Soil</span>
-        </div>
-        <div class="layer-label" id="label-rocks">
-          <div class="layer-label-line"></div>
-          <span class="layer-label-text">Piedras · Rocks</span>
-        </div>
-      </div>
     </div>
   </div>
 
-  <!-- SPEECHES ACCORDION -->
   <div class="speeches-section">
     <div class="speeches-title">Discursos · Speeches</div>
     <div id="speeches-container">
       <div class="empty-state" id="empty-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 12 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"/>
+          <circle cx="12" cy="12" r="10"/>
           <path d="M12 8v4M12 16h.01"/>
         </svg>
         <p>Los discursos aparecerán aquí · Speeches will appear here</p>
@@ -927,35 +981,35 @@
    DATA
 ═══════════════════════ */
 const SPEECHES = [
-  {
-    id: 1, speaker: "Carlos & Elena", role: "Padres de Manu · Manu's Parents", layer: "rocks",
-    es: `Querido Manuel, cuando eras pequeño nos preguntabas siempre cuándo encontrarías a alguien que te quisiera tanto como nosotros. Hoy tenemos la respuesta. Dani llegó a tu vida como llega la primavera: sin avisar, llenándolo todo de color.\n\nHemos visto cómo te transformabas. Cómo aprendiste a escuchar, a ceder, a reír de otro modo. El amor, hijo, no te hace más pequeño. Te hace más entero.\n\nHoy os deseamos lo que nosotros hemos tenido durante treinta y cinco años: la certeza de que al final del día siempre hay alguien esperándote en casa. Brindemos por Manu y Dani.`,
-    en: `Dear Manuel, when you were little you always asked us when you would find someone who loved you as much as we do. Today we have the answer. Dani came into your life like spring arrives: unannounced, filling everything with color.\n\nWe have watched you transform. How you learned to listen, to yield, to laugh in a different way. Love, son, does not make you smaller. It makes you more whole.\n\nToday we wish you what we have had for thirty-five years: the certainty that at the end of the day, there is always someone waiting for you at home. Let us raise a glass to Manu and Dani.`
-  },
-  {
-    id: 2, speaker: "Rosa & Tomás", role: "Padres de Dani · Dani's Parents", layer: "soil",
-    es: `Dani, eres nuestra mayor aventura. Desde el primer día supimos que el mundo no te iba a contener fácilmente. Y tenían razón todos los que decían que necesitabas a alguien que supiera seguirte el ritmo.\n\nManu, gracias por quererla exactamente como es. No a pesar de su carácter, sino por él. Eso es lo que hace un compañero de verdad.\n\nOs pedimos una sola cosa: que cuando la vida se ponga difícil —y se pondrá— os miréis y os acordéis de este día, de esta luz, de esta alegría. Que sea vuestra brújula. Por Manu y Dani.`,
-    en: `Dani, you are our greatest adventure. From the very first day we knew the world was not going to contain you easily. And everyone who said you needed someone who could keep up with your rhythm was right.\n\nManu, thank you for loving her exactly as she is. Not in spite of her character, but because of it. That is what a true partner does.\n\nWe ask only one thing of you: when life gets hard — and it will — look at each other and remember this day, this light, this joy. Let it be your compass. To Manu and Dani.`
-  },
-  {
-    id: 3, speaker: "Sofía", role: "Mejor amiga de Dani · Dani's Best Friend", layer: "coconut",
-    es: `Dani, llevamos quince años siendo amigas. He estado en todos tus momentos importantes, en las alegrías y en las crisis de las dos de la mañana. Y puedo decir, con total conocimiento de causa, que nunca te había visto tan feliz.\n\nLa primera vez que me hablaste de Manu, a mitad de frase me dijiste: "Es que me escucha, Sofía. De verdad." Y pensé: este es el indicado.\n\nManu, te encargamos a la persona más especial de nuestra vida. Cuídala. Y Dani, cuídalo a él también, que tú no eres fácil. Os quiero muchísimo a los dos.`,
-    en: `Dani, we have been friends for fifteen years. I have been there for all your important moments, the highs and the two-in-the-morning crises. And I can say, with full knowledge, that I have never seen you this happy.\n\nThe first time you told me about Manu, halfway through the sentence you said: "He listens to me, Sofía. Really listens." And I thought: this is the one.\n\nManu, we entrust you with the most special person in our lives. Take care of her. And Dani, take care of him too — you are not easy to live with. I love you both so much.`
-  },
-  {
-    id: 4, speaker: "Pablo & Sergio", role: "Amigos de Manu · Manu's Friends", layer: "perlite",
-    es: `Nosotros conocemos a Manu desde los siete años. Hemos compartido campamentos, mudanzas, proyectos absurdos y alguna que otra idea terrible. Y en todo ese tiempo, jamás le habíamos visto mirar a nadie como mira a Dani.\n\nHay una cosa que aprendes cuando conoces bien a alguien: sabes cuándo llega la persona correcta porque ese alguien simplemente... mejora. Y Manu ha mejorado. En todo.\n\nDani, gracias por hacer de nuestro amigo la mejor versión de sí mismo. Y Manu, menos mal que al final encontraste el camino. Salud.`,
-    en: `We have known Manu since we were seven years old. We have shared summer camps, apartments, ridiculous projects, and more than a few terrible ideas. And in all that time, we had never seen him look at anyone the way he looks at Dani.\n\nThere is something you learn when you know someone well: you know when the right person arrives because that someone simply... improves. And Manu has improved. In every way.\n\nDani, thank you for making our friend the best version of himself. And Manu, thank goodness you finally found your way. Cheers.`
-  },
-  {
-    id: 5, speaker: "Abuelos · Grandparents", role: "Familia · Family", layer: "pine",
-    es: `Hemos visto muchas bodas en esta familia. Bodas sencillas, bodas difíciles, bodas que duraron y algunas que no. Y con los años aprendes que el secreto no está en el día de hoy, tan hermoso como es.\n\nEl secreto está en los miles de días normales que vienen después. En compartir el café por la mañana. En decidir juntos qué hacer un domingo sin planes. En perdonarse cuando hay que perdonarse.\n\nHoy sois los protagonistas. Mañana seréis compañeros. Y eso, Manu y Dani, es lo más bonito que existe. Os queremos.`,
-    en: `We have seen many weddings in this family. Simple weddings, difficult ones, weddings that lasted and some that did not. And with the years you learn that the secret is not in today, as beautiful as it is.\n\nThe secret is in the thousands of ordinary days that come after. In sharing morning coffee. In deciding together what to do on a Sunday with no plans. In forgiving each other when forgiveness is needed.\n\nToday you are the stars. Tomorrow you will be companions. And that, Manu and Dani, is the most beautiful thing there is. We love you.`
-  }
+  { id: 1, speaker: "Familia",      role: "Familia · Family",                     layer: "rocks",
+    es: "Discurso en directo.",
+    en: "Live speech." },
+  { id: 2, speaker: "Celia",        role: "Amigos de Manu · Manu's friends",      layer: "soil",
+    es: "Discurso en directo.",
+    en: "Live speech." },
+  { id: 3, speaker: "Sol",          role: "Amigos de Dani · Dani's friends",      layer: "perlite",
+    es: "Discurso en directo.",
+    en: "Live speech." },
+  { id: 4, speaker: "Celia",        role: "Amigos en común · Common friends",     layer: "coconut",
+    es: "Discurso en directo.",
+    en: "Live speech." },
+  { id: 5, speaker: "Pree & Dom",   role: "Amigos internacionales · International friends", layer: "pine",
+    es: "Discurso en directo.",
+    en: "Live speech." },
+  { id: 6, speaker: "Manu & Dani",  role: "Los novios · The couple",              layer: "seeds",
+    es: "Discurso en directo.",
+    en: "Live speech." }
 ];
 
-const LAYER_ORDER = ['rocks','soil','coconut','perlite','pine'];
-const LAYER_LABEL = { rocks:'label-rocks', soil:'label-soil', coconut:'label-coconut', perlite:'label-perlite', pine:'label-pine' };
+const LAYER_ORDER = ['rocks','soil','perlite','coconut','pine','seeds'];
+const LAYER_NAMES = {
+  rocks:   { es:'Piedras',         en:'Rocks' },
+  soil:    { es:'Tierra',          en:'Soil' },
+  perlite: { es:'Perlita',         en:'Perlite' },
+  coconut: { es:'Fibra de coco',   en:'Coco fiber' },
+  pine:    { es:'Corteza de pino', en:'Pine bark' },
+  seeds:   { es:'Semillas',        en:'Seeds' }
+};
 
 /* ═══════════════════════
    PARTICLE SYSTEM
@@ -972,43 +1026,31 @@ window.addEventListener('resize', resizeCanvas);
 const PARTICLE_CFG = {
   rocks:   { colors:['#8c7a6e','#9a8878','#7a6a5e','#b0a090'], minS:5,  maxS:11, shape:'rock' },
   soil:    { colors:['#7a5c3e','#8a6c4e','#5a3c1e','#6a4c2e'], minS:3,  maxS:6,  shape:'dot'  },
-  coconut: { colors:['#b8924a','#a07838','#c8a258','#d4b06a'], minS:2,  maxS:5,  shape:'line' },
   perlite: { colors:['#ffffff','#f0ede8','#e8e4de','#ddd8d0'], minS:4,  maxS:8,  shape:'dot'  },
-  pine:    { colors:['#8b6035','#6b4820','#9b7040','#7a5228'], minS:6,  maxS:13, shape:'rect' }
+  coconut: { colors:['#b8924a','#a07838','#c8a258','#d4b06a'], minS:2,  maxS:5,  shape:'line' },
+  pine:    { colors:['#8b6035','#6b4820','#9b7040','#7a5228'], minS:6,  maxS:13, shape:'rect' },
+  seeds:   { colors:['#8b6035','#a07838','#c8a258','#6b4820'], minS:3,  maxS:6,  shape:'seed' }
 };
 
-/* Layer destination Y in SVG viewBox (0-310 h):
-   Rim opening at vb y=28.
-   rocks   centre~262, soil~220, coconut~178, perlite~136, pine~94 */
-const LAYER_VB_Y  = { rocks:262, soil:220, coconut:178, perlite:136, pine:94 };
-const LAYER_OPEN_Y = 28;
-const VB_HEIGHT = 310;
-const VB_WIDTH  = 160;
-
-function svgToPage(vbX, vbY) {
-  const el = document.getElementById('pot-svg');
-  const r  = el.getBoundingClientRect();
-  return {
-    x: r.left + (vbX / VB_WIDTH)  * r.width,
-    y: r.top  + window.scrollY + (vbY / VB_HEIGHT) * r.height
-  };
-}
+const LAYER_VB_Y  = { rocks:185, soil:158, perlite:131, coconut:104, pine:77, seeds:50 };
+const LAYER_OPEN_Y = 32;
+const VB_HEIGHT = 220;
+const VB_WIDTH  = 240;
 
 function spawnParticles(layer) {
   const cfg = PARTICLE_CFG[layer];
   if (!cfg) return;
-
   const el = document.getElementById('pot-svg');
   const r  = el.getBoundingClientRect();
   const scaleX = r.width / VB_WIDTH;
   const scaleY = r.height / VB_HEIGHT;
 
   const targetY  = r.top + window.scrollY + LAYER_VB_Y[layer] * scaleY;
-  const startY   = r.top + window.scrollY + LAYER_OPEN_Y * scaleY - 10;
-  const leftEdge = r.left + 18 * scaleX;
-  const rightEdge= r.left + 142 * scaleX;
+  const startY   = r.top + window.scrollY + LAYER_OPEN_Y * scaleY - 14;
+  const leftEdge = r.left + 28 * scaleX;
+  const rightEdge= r.left + 212 * scaleX;
 
-  const count = 42;
+  const count = 48;
   for (let i = 0; i < count; i++) {
     const x   = leftEdge + Math.random() * (rightEdge - leftEdge);
     const col = cfg.colors[Math.floor(Math.random() * cfg.colors.length)];
@@ -1049,6 +1091,10 @@ function drawParticle(p) {
     ctx.beginPath();
     ctx.moveTo(-p.s, 0); ctx.lineTo(p.s, 0);
     ctx.stroke();
+  } else if (p.shape === 'seed') {
+    ctx.beginPath();
+    ctx.ellipse(0, 0, p.s * 0.85, p.s * 0.42, 0, 0, Math.PI*2);
+    ctx.fill();
   } else {
     ctx.beginPath();
     ctx.arc(0, 0, p.s/2, 0, Math.PI*2);
@@ -1065,7 +1111,6 @@ function animLoop() {
   for (const p of particles) {
     p.elapsed += dt;
     if (p.elapsed < p.delay) { alive.push(p); continue; }
-
     if (!p.settled) {
       const dy = p.targetY - p.y;
       if (dy > 1.5) {
@@ -1076,13 +1121,12 @@ function animLoop() {
         p.vx *= 0.97;
       } else {
         p.y  = p.targetY;
-        p.vy *= -0.18; // tiny bounce
+        p.vy *= -0.18;
         p.settled = true;
       }
     } else {
       p.alpha -= 0.032;
     }
-
     p.rot += p.rotV;
     if (p.alpha > 0) { drawParticle(p); alive.push(p); }
   }
@@ -1099,70 +1143,130 @@ function animLoop() {
 /* ═══════════════════════
    LAYER MANAGEMENT
 ═══════════════════════ */
-let prevLayers = [];
+let prevFilledLayers = [];
 
-function updateLayers(activeLayers) {
+function renderLayers(filledLayers) {
   LAYER_ORDER.forEach(layer => {
-    const g     = document.getElementById(`layer-${layer}-group`);
-    const label = document.getElementById(LAYER_LABEL[layer]);
-    const isNew = activeLayers.includes(layer) && !prevLayers.includes(layer);
-    const isActive = activeLayers.includes(layer);
-
-    if (isActive) {
-      if (isNew) {
-        spawnParticles(layer);
-        g.style.transition = 'opacity 0.25s ease 0.55s';
-        g.style.opacity = '0';
-        setTimeout(() => { g.style.opacity = '1'; }, 580);
-      } else {
-        g.style.transition = 'none';
-        g.style.opacity = '1';
-      }
-      if (label) label.classList.add('visible');
-    } else {
-      g.style.opacity = '0';
-      if (label) label.classList.remove('visible');
-    }
+    const g = document.getElementById(`layer-${layer}-group`);
+    if (!g) return;
+    g.style.transition = 'opacity 0.4s ease';
+    g.style.opacity = filledLayers.includes(layer) ? '1' : '0';
   });
-  prevLayers = [...activeLayers];
 }
+
+/* Ceremony animation when a new layer arrives */
+let ceremonyPlaying = false;
+const ceremonyOverlay  = document.getElementById('ceremony-overlay');
+const ceremonyLabel    = document.getElementById('ceremony-layer-name');
+const potWrapper       = document.getElementById('pot-wrapper');
+
+async function playLayerCeremony(layer) {
+  if (ceremonyPlaying) return;
+  ceremonyPlaying = true;
+
+  // 1. Render todas las capas (incluyendo la nueva)
+  renderLayers(prevFilledLayers);
+
+  // 2. Capturar posición original antes de sacarla del flujo
+  const origRect = potWrapper.getBoundingClientRect();
+  const origWidth = origRect.width;
+
+  // 3. Fijar en posición exacta actual (sin salto visual)
+  const applyStyle = (props) => Object.assign(potWrapper.style, props);
+  applyStyle({
+    position: 'fixed',
+    left: origRect.left + 'px',
+    top: origRect.top + 'px',
+    width: origWidth + 'px',
+    margin: '0',
+    zIndex: '901',
+    transition: 'none',
+    transform: 'none'
+  });
+  void potWrapper.offsetWidth; // force reflow
+
+  // 4. Oscurecer fondo
+  ceremonyOverlay.classList.add('visible');
+
+  // 5. Animar hacia el centro
+  const targetW = Math.min(300, window.innerWidth * 0.72);
+  const EASE = 'left 0.7s ease, top 0.7s ease, width 0.7s ease, transform 0.7s ease';
+  applyStyle({
+    transition: EASE,
+    left: '50%',
+    top: '50%',
+    width: targetW + 'px',
+    transform: 'translate(-50%, -50%)'
+  });
+
+  // 6. Label
+  const name = LAYER_NAMES[layer];
+  if (name) {
+    ceremonyLabel.innerHTML = `${name.es} <span style="opacity:0.6;font-size:0.72em">· ${name.en}</span>`;
+    setTimeout(() => ceremonyLabel.classList.add('visible'), 400);
+  }
+
+  await wait(750); // esperar que llegue al centro
+
+  // 7. Partículas (posición SVG correcta ahora que está centrado)
+  spawnParticles(layer);
+  await wait(3200);
+
+  // 8. Ocultar label
+  ceremonyLabel.classList.remove('visible');
+  await wait(300);
+
+  // 9. Animar de vuelta a posición original + fade out overlay simultáneamente
+  applyStyle({
+    transition: EASE,
+    left: origRect.left + 'px',
+    top: origRect.top + 'px',
+    width: origWidth + 'px',
+    transform: 'none'
+  });
+  ceremonyOverlay.classList.remove('visible');
+
+  await wait(750); // esperar que vuelva a su sitio y overlay desaparezca
+
+  // 10. Restaurar al flujo normal (overlay ya transparente, pot en posición original)
+  potWrapper.style.cssText = '';
+
+  ceremonyPlaying = false;
+}
+
+function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 /* ═══════════════════════
    ACCORDION
 ═══════════════════════ */
-let expandedId   = null;
+let expandedIds = new Set();
 let prevActiveIds = [];
 
 function renderSpeeches(activeIds) {
   const container = document.getElementById('speeches-container');
-  const newId = activeIds.find(id => !prevActiveIds.includes(id));
+  const newlyAdded = activeIds.filter(id => !prevActiveIds.includes(id));
 
-  const activeLayers = SPEECHES.filter(s => activeIds.includes(s.id)).map(s => s.layer);
-  updateLayers(activeLayers);
+  // Auto-expand newest
+  newlyAdded.forEach(id => expandedIds.add(id));
 
   if (activeIds.length === 0) {
     container.innerHTML = '';
     container.appendChild(createEmptyState());
-    expandedId = null;
     prevActiveIds = [...activeIds];
     return;
   }
 
-  // Auto-expand newest
-  if (newId) expandedId = newId;
-
   container.innerHTML = '';
   SPEECHES.filter(s => activeIds.includes(s.id)).forEach(speech => {
-    container.appendChild(createCard(speech, speech.id === expandedId));
+    container.appendChild(createCard(speech, expandedIds.has(speech.id)));
   });
-
   prevActiveIds = [...activeIds];
 }
 
 function createEmptyState() {
   const d = document.createElement('div');
   d.className = 'empty-state'; d.id = 'empty-state';
-  d.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 12 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"/><path d="M12 8v4M12 16h.01"/></svg><p>Los discursos aparecerán aquí · Speeches will appear here</p>`;
+  d.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><p>Los discursos aparecerán aquí · Speeches will appear here</p>`;
   return d;
 }
 
@@ -1181,6 +1285,7 @@ function createCard(speech, expanded) {
         <button class="lang-btn active" data-lang="es">ES</button>
         <button class="lang-btn"        data-lang="en">EN</button>
       </div>
+      <div class="chevron"></div>
     </div>
     <div class="speech-body-wrap">
       <div class="speech-body-inner">
@@ -1191,6 +1296,13 @@ function createCard(speech, expanded) {
         </div>
       </div>
     </div>`;
+
+  // Header click toggles expansion
+  card.querySelector('.speech-card-header').addEventListener('click', e => {
+    if (e.target.classList.contains('lang-btn')) return;
+    const isExpanded = card.classList.toggle('expanded');
+    if (isExpanded) expandedIds.add(speech.id); else expandedIds.delete(speech.id);
+  });
 
   card.querySelectorAll('.lang-btn').forEach(btn => {
     btn.addEventListener('click', e => {
@@ -1207,44 +1319,55 @@ function createCard(speech, expanded) {
 }
 
 function fmt(text) {
-  return text.split('\n\n').map(p => `<p style="margin-bottom:.8em">${p}</p>`).join('');
+  return (text || '').split('\n\n').map(p => `<p style="margin-bottom:.6em">${p}</p>`).join('');
 }
 
 /* ═══════════════════════
    STATE / ROUTING
 ═══════════════════════ */
-let state = { page: 'landing', activeSpeeches: [] };
-
-let viewState = 'landing'; // 'landing' | 'compose' — local only, not synced
+let state = { page: 'landing', activeSpeeches: [], filledLayers: [] };
 
 function setView(v) {
-  const landing = document.getElementById('landing');
-  const compose = document.getElementById('compose-view');
-  const main    = document.getElementById('main-view');
-  landing.style.display = v === 'landing' ? 'flex' : 'none';
-  compose.style.display = v === 'compose' ? 'flex' : 'none';
-  main.style.display    = v === 'main'    ? 'flex' : 'none';
+  document.getElementById('landing').style.display    = v === 'landing' ? 'flex' : 'none';
+  document.getElementById('main-view').style.display  = v === 'main'    ? 'flex' : 'none';
 }
 
-function showLanding() { setView('landing'); }
-function showMain()    { setView('main'); }
-function showCompose() { setView('compose'); }
+let initialStateLoaded = false;
 
 function applyState(s) {
-  if (s.page === 'main') {
-    showMain();
-  } else {
-    // page is 'landing' → respect local viewState
-    if (viewState === 'compose') showCompose(); else showLanding();
-  }
+  const newPage = s.page === 'main' ? 'main' : 'landing';
+  setView(newPage);
+
   renderSpeeches(s.activeSpeeches || []);
+
+  const newFilled = s.filledLayers || [];
+
+  // First time we receive any remote state: just render layers, no animation.
+  if (!initialStateLoaded) {
+    renderLayers(newFilled);
+    prevFilledLayers = [...newFilled];
+    initialStateLoaded = true;
+    return;
+  }
+
+  // Detect new filled layer → ceremony animation
+  const justAdded = newFilled.find(l => !prevFilledLayers.includes(l));
+  if (justAdded && newPage === 'main') {
+    prevFilledLayers = [...newFilled];
+    playLayerCeremony(justAdded);
+  } else {
+    renderLayers(newFilled);
+    prevFilledLayers = [...newFilled];
+  }
 }
 
-// BroadcastChannel as local fallback
 const channel = new BroadcastChannel('wedding-channel');
 channel.onmessage = e => applyState(e.data);
 
-applyState(state);
+// Initial render before any remote state arrives — landing only, no animation.
+setView('landing');
+renderSpeeches([]);
+renderLayers([]);
 
 // ─── FIREBASE ───
 const firebaseConfig = {
@@ -1258,65 +1381,207 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+const rtdb = firebase.database();
+const fsdb = firebase.firestore();
 
-db.ref('weddingState').on('value', (snapshot) => {
+// ─── CLOUDINARY (fotos) ───
+const CLOUDINARY_CLOUD_NAME    = 'db2quuygw';
+const CLOUDINARY_UPLOAD_PRESET = 'wedding_unsigned';
+
+rtdb.ref('weddingState').on('value', (snapshot) => {
   const remote = snapshot.val();
   if (remote) {
-    applyState({ page: remote.page || 'landing', activeSpeeches: remote.activeSpeeches || [] });
+    applyState({
+      page: remote.page || 'landing',
+      activeSpeeches: remote.activeSpeeches || [],
+      filledLayers: remote.filledLayers || []
+    });
   }
 });
 
 /* ═══════════════════════
-   MESSAGES — form handling
+   FLIP CARD + MESSAGE FORM
 ═══════════════════════ */
-const composeForm   = document.getElementById('compose-form');
-const nameInput     = document.getElementById('msg-name');
-const msgInput      = document.getElementById('msg-text');
+const flipCard      = document.getElementById('flip-card');
+const openMsgBtn    = document.getElementById('open-message-btn');
+const backBtn       = document.getElementById('back-btn');
+const memoryForm    = document.getElementById('memory-form');
+const guestNameEl   = document.getElementById('guest-name');
+const messageBox    = document.getElementById('message-box');
+const charCounter   = document.getElementById('char-counter');
+const emojiBtn      = document.getElementById('emoji-btn');
+const emojiPanel    = document.getElementById('emoji-panel');
+const uploadBtn     = document.getElementById('upload-photo-button');
+const photoInput    = document.getElementById('photo-upload');
+const previewBox    = document.getElementById('image-preview-container');
 const sendBtn       = document.getElementById('send-msg-btn');
-const cancelBtn     = document.getElementById('cancel-msg-btn');
-const openBtn       = document.getElementById('open-message-btn');
-const successBox    = document.getElementById('compose-success');
+const formWrap      = document.getElementById('form-wrap');
+const confirmation  = document.getElementById('confirmation-message');
 
-openBtn.addEventListener('click', () => {
-  viewState = 'compose';
-  nameInput.value = '';
-  msgInput.value = '';
-  successBox.classList.remove('visible');
-  composeForm.style.display = '';
+let selectedFiles = [];
+
+function doFlip() {
+  flipCard.classList.toggle('is-flipped');
+}
+
+openMsgBtn.addEventListener('click', () => {
+  memoryForm.reset();
+  messageBox.innerHTML = '';
+  selectedFiles = [];
+  previewBox.innerHTML = '';
+  updateCharCounter();
+  formWrap.style.display = '';
+  confirmation.classList.remove('visible');
   sendBtn.disabled = false;
-  showCompose();
-  setTimeout(() => nameInput.focus(), 50);
+  sendBtn.textContent = 'Enviar · Send';
+  doFlip();
+  setTimeout(() => guestNameEl.focus(), 700);
 });
 
-cancelBtn.addEventListener('click', () => {
-  viewState = 'landing';
-  showLanding();
+backBtn.addEventListener('click', doFlip);
+
+// Emoji panel
+const EMOJIS = ["❤️","😂","🎉","🥳","🥰","🥂","💃","🕺","✨","👍","🙏","😊","😎","💖","😍","🔥","💍","💒","🎂","🎈","🎁","📷","💌","🌟","💐","🍷","🍰","🎊","🤩","🙌"];
+EMOJIS.forEach(em => {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.textContent = em;
+  b.addEventListener('click', () => {
+    messageBox.focus();
+    document.execCommand('insertText', false, em);
+    emojiPanel.classList.remove('show');
+  });
+  emojiPanel.appendChild(b);
+});
+emojiBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  emojiPanel.classList.toggle('show');
+});
+document.addEventListener('click', e => {
+  if (!emojiPanel.contains(e.target) && e.target !== emojiBtn) {
+    emojiPanel.classList.remove('show');
+  }
 });
 
-composeForm.addEventListener('submit', async (e) => {
+// Char counter
+function updateCharCounter() {
+  const len = messageBox.innerText.length;
+  charCounter.textContent = `${len} / 500`;
+  charCounter.classList.toggle('over', len > 500);
+}
+messageBox.addEventListener('input', updateCharCounter);
+
+// Photo upload
+uploadBtn.addEventListener('click', () => photoInput.click());
+photoInput.addEventListener('change', async () => {
+  const newFiles = Array.from(photoInput.files);
+  photoInput.value = '';
+  if (selectedFiles.length + newFiles.length > 5) {
+    alert('Máximo 5 fotos · Maximum 5 photos');
+    return;
+  }
+
+  for (const f of newFiles) {
+    if (f.size > 10 * 1024 * 1024) {
+      alert(`"${f.name}" supera 10MB y se omitirá.\n"${f.name}" exceeds 10MB and will be skipped.`);
+      continue;
+    }
+    let toUpload = f;
+    try {
+      if (typeof imageCompression === 'function' && !f.type.includes('gif')) {
+        toUpload = await imageCompression(f, {
+          maxSizeMB: 0.3,
+          maxWidthOrHeight: 1920,
+          useWebWorker: true
+        });
+      }
+    } catch (err) {
+      console.warn('Compresión fallida, se sube original:', err);
+    }
+    selectedFiles.push({ file: toUpload, name: f.name, type: f.type });
+    addPreview(toUpload);
+  }
+});
+
+function addPreview(file) {
+  const idx = selectedFiles.length - 1;
+  const div = document.createElement('div');
+  div.className = 'preview-thumb';
+  const reader = new FileReader();
+  reader.onload = e => {
+    div.innerHTML = `<img src="${e.target.result}" alt="preview"><button type="button" class="remove" data-idx="${idx}">×</button>`;
+    div.querySelector('.remove').addEventListener('click', () => {
+      const i = parseInt(div.querySelector('.remove').dataset.idx);
+      selectedFiles.splice(i, 1);
+      rebuildPreview();
+    });
+  };
+  reader.readAsDataURL(file);
+  previewBox.appendChild(div);
+}
+
+function rebuildPreview() {
+  previewBox.innerHTML = '';
+  const cur = selectedFiles.slice();
+  selectedFiles = [];
+  cur.forEach(s => {
+    selectedFiles.push(s);
+    addPreview(s.file);
+  });
+}
+
+// Submit
+memoryForm.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const name = nameInput.value.trim();
-  const text = msgInput.value.trim();
-  if (!name || !text) return;
+  const name = guestNameEl.value.trim();
+  const messageHTML = messageBox.innerHTML.trim();
+  const messageText = messageBox.innerText.trim();
+  if (!name) { guestNameEl.focus(); return; }
+  if (messageText.length > 500) {
+    alert('El mensaje supera los 500 caracteres.');
+    return;
+  }
+  if (!messageText && selectedFiles.length === 0) {
+    alert('Escribe un mensaje o adjunta una foto · Write a message or attach a photo');
+    return;
+  }
 
   sendBtn.disabled = true;
+  sendBtn.textContent = 'Enviando · Sending…';
+
   try {
-    await db.ref('messages').push({
-      name,
-      message: text,
-      timestamp: firebase.database.ServerValue.TIMESTAMP
+    const files = [];
+    for (const s of selectedFiles) {
+      const fd = new FormData();
+      fd.append('file', s.file);
+      fd.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+        method: 'POST',
+        body: fd
+      });
+      if (!res.ok) throw new Error('Cloudinary upload failed: ' + res.status);
+      const data = await res.json();
+      files.push({ type: s.type, url: data.secure_url, publicId: data.public_id });
+    }
+
+    await fsdb.collection('memories').add({
+      guestName: name,
+      messageHTML: messageHTML,
+      message: messageText,
+      files,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
-    composeForm.style.display = 'none';
-    successBox.classList.add('visible');
+
+    formWrap.style.display = 'none';
+    confirmation.classList.add('visible');
     setTimeout(() => {
-      viewState = 'landing';
-      showLanding();
-    }, 1600);
+      doFlip();
+    }, 1800);
   } catch (err) {
-    console.error('Error sending message:', err);
-    sendBtn.disabled = false;
+    console.error('Error enviando mensaje:', err);
     alert('No se ha podido enviar el mensaje. Inténtalo de nuevo.\nCould not send the message. Please try again.');
+    sendBtn.disabled = false;
+    sendBtn.textContent = 'Enviar · Send';
   }
 });
 </script>
