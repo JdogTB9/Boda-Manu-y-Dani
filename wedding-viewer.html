@@ -267,10 +267,16 @@
     100% { box-shadow: 0 0 0 0 rgba(255,79,58,0);     opacity: 1; }
   }
 
-  /* Móvil: card sin padding lateral + altura reducida → cover zoom-out, nombres visibles */
+  /* Móvil: card a pantalla completa, sin crema, sin bordes redondeados */
   @media (max-width: 500px) {
-    #landing { padding: 1.5rem 0; }
-    .welcome-section { height: min(580px, 88dvh); }
+    #landing { padding: 0; }
+    .welcome-section { height: 100dvh; max-width: 100%; }
+    .card-face { border-radius: 0; }
+    .card-front {
+      background-size: auto 74%;
+      background-position: 50% 35%;
+      background-color: #0d0d0d;
+    }
   }
 
   /* Card back: form */
