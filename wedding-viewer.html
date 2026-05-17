@@ -32,10 +32,26 @@
     color: var(--text-dark);
     overflow-x: hidden;
   }
+  /* Sin scroll vertical en landing y form de mensaje (se activa por JS). */
+  html.lock-scroll, body.no-scroll {
+    overflow: hidden;
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  /* Toggle global de idioma — controla qué textos bilingües se ven. */
+  body[data-lang="en"] .speech-text[data-lang="es"],
+  body[data-lang="en"] [data-bilang="es"] { display: none !important; }
+  body[data-lang="es"] .speech-text[data-lang="en"],
+  body[data-lang="es"] [data-bilang="en"] { display: none !important; }
+  body[data-lang="en"] .speech-text[data-lang="en"] { display: block; }
+  body[data-lang="es"] .speech-text[data-lang="es"] { display: block; }
 
   /* ─── LANDING (flip card) ─── */
   #landing {
     min-height: 100vh;
+    min-height: 100dvh;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -214,6 +230,78 @@
     100%     { opacity: 0; }
   }
 
+  /* ─── BANNER LIVE (compartido entre landing y main view) ─── */
+  .live-banner-pill {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: rgba(192,57,43,0.92);
+    color: white;
+    padding: 0.32rem 0.85rem;
+    border-radius: 18px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba(192,57,43,0.3);
+    margin: 0 auto 0.9rem;
+    width: fit-content;
+    max-width: 100%;
+    white-space: nowrap;
+  }
+  body[data-ceremony="live"] .live-banner-pill { display: inline-flex; }
+  .live-banner-pill .live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ff4f3a;
+    box-shadow: 0 0 0 0 rgba(255,79,58,0.6);
+    animation: live-pulse 1.4s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes live-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(255,79,58,0.7); opacity: 1; }
+    70%  { box-shadow: 0 0 0 8px rgba(255,79,58,0);   opacity: 0.6; }
+    100% { box-shadow: 0 0 0 0 rgba(255,79,58,0);     opacity: 1; }
+  }
+
+  /* Mensaje cuando la ceremonia ha terminado (sustituye al botón). */
+  .ended-message {
+    display: none;
+    text-align: center;
+    color: white;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1.1rem;
+    line-height: 1.45;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    padding: 0.6rem 0.4rem;
+  }
+  .ended-message small {
+    display: block;
+    font-family: 'Jost', sans-serif;
+    font-style: normal;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+    opacity: 0.75;
+  }
+  body[data-ceremony="ended"] .ended-message { display: block; }
+  body[data-ceremony="ended"] #open-message-btn { display: none; }
+
+  /* Zoom suave de la foto de portada en móvil para que los nombres no se corten. */
+  @media (max-width: 600px) {
+    .card-front {
+      background-size: 92% auto;
+      background-repeat: no-repeat;
+      background-color: var(--cream);
+    }
+  }
+
   /* Card back: form */
   .card-back {
     background-color: var(--cream);
@@ -221,35 +309,45 @@
     -webkit-transform: rotateY(180deg) translateZ(1px);
     display: flex;
     flex-direction: column;
-    padding: 1.4rem 1.3rem 1.2rem;
-    overflow-y: auto;
+    padding: 1.2rem 1.2rem 1.1rem;
+    overflow: hidden;
     pointer-events: none;
   }
   .card-back h2 {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 300;
     font-style: italic;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     color: var(--olive-dark);
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0.7rem;
+    flex-shrink: 0;
   }
-  #memory-form {
+  #form-wrap {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.7rem;
+    min-height: 0;
+  }
+  #memory-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    min-height: 0;
   }
   .name-input {
     width: 100%;
     border: 1px solid var(--beige-mid);
     border-radius: 10px;
-    padding: 0.7rem 0.9rem;
+    padding: 0.65rem 0.9rem;
     font-family: 'Jost', sans-serif;
     font-size: 0.95rem;
     color: var(--text-dark);
     background: white;
     -webkit-appearance: none;
     transition: border-color 0.2s, box-shadow 0.2s;
+    flex-shrink: 0;
   }
   .name-input:focus {
     outline: none;
@@ -257,52 +355,9 @@
     box-shadow: 0 0 0 3px rgba(138,154,106,0.15);
   }
 
-  .editor-toolbar {
-    display: flex;
-    gap: 0.4rem;
-    align-items: center;
-    margin-bottom: -0.3rem;
-  }
-  .toolbar-btn {
-    background: white;
-    border: 1px solid var(--beige-mid);
-    border-radius: 8px;
-    padding: 0.3rem 0.55rem;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .toolbar-btn:hover { background: var(--beige-light); }
-  .emoji-container { position: relative; }
-  .emoji-panel {
-    display: none;
-    position: absolute;
-    top: 110%;
-    left: 0;
-    background: white;
-    border: 1px solid var(--beige-mid);
-    border-radius: 10px;
-    padding: 0.4rem;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-    z-index: 10;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 2px;
-    width: 220px;
-  }
-  .emoji-panel.show { display: grid; }
-  .emoji-panel button {
-    background: none;
-    border: none;
-    font-size: 1.05rem;
-    cursor: pointer;
-    padding: 0.25rem;
-    border-radius: 4px;
-  }
-  .emoji-panel button:hover { background: var(--beige-light); }
-
   .editable {
-    min-height: 100px;
-    max-height: 200px;
+    flex: 1;
+    min-height: 90px;
     overflow-y: auto;
     border: 1px solid var(--beige-mid);
     border-radius: 10px;
@@ -330,7 +385,8 @@
     letter-spacing: 0.1em;
     text-align: right;
     color: var(--text-light);
-    margin-top: -0.4rem;
+    margin-top: -0.3rem;
+    flex-shrink: 0;
   }
   .char-counter.over { color: #c0392b; }
 
@@ -339,7 +395,8 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-top: 0.2rem;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
   }
   #upload-photo-button {
     background: white;
@@ -403,7 +460,8 @@
     text-transform: uppercase;
     cursor: pointer;
     transition: background 0.2s, opacity 0.2s;
-    margin-top: 0.4rem;
+    margin-top: auto;
+    flex-shrink: 0;
   }
   .submit-button:hover { background: var(--olive-mid); }
   .submit-button:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -413,14 +471,15 @@
     border: 1px solid var(--beige-dark);
     color: var(--text-mid);
     border-radius: 28px;
-    padding: 0.6rem 1.2rem;
+    padding: 0.55rem 1.2rem;
     font-family: 'Jost', sans-serif;
     font-size: 0.65rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     cursor: pointer;
-    margin-top: 0.6rem;
+    margin-top: 0.4rem;
     transition: background 0.2s;
+    flex-shrink: 0;
   }
   .back-button:hover { background: var(--beige-light); }
 
@@ -460,6 +519,7 @@
   #main-view {
     display: none;
     min-height: 100vh;
+    min-height: 100dvh;
     flex-direction: column;
     background: var(--cream);
   }
@@ -467,6 +527,7 @@
   .main-header {
     padding: 1.5rem 1.5rem 0.5rem;
     text-align: center;
+    position: relative;
   }
   .main-header h1 {
     font-family: 'Cormorant Garamond', serif;
@@ -482,6 +543,39 @@
     text-transform: uppercase;
     color: var(--text-light);
     margin-top: 0.3rem;
+  }
+
+  /* Toggle global de idioma en el header. */
+  .global-lang-toggle {
+    position: absolute;
+    top: 1.1rem;
+    right: 1.1rem;
+    display: inline-flex;
+    background: white;
+    border: 1px solid var(--beige-mid);
+    border-radius: 18px;
+    padding: 2px;
+    gap: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    z-index: 5;
+  }
+  .global-lang-toggle button {
+    background: none;
+    border: none;
+    padding: 4px 11px;
+    border-radius: 14px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .global-lang-toggle button.active {
+    background: var(--olive-dark);
+    color: var(--cream);
   }
 
   /* ─── POT (glass) ─── */
@@ -537,6 +631,15 @@
     background: var(--beige-mid);
   }
 
+  /* Sección dedicada al discurso EN DIRECTO, encima de la maceta. */
+  .live-speech-section {
+    padding: 1.2rem 1.5rem 0;
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .live-speech-section:empty { display: none; }
+
   .speech-card {
     background: white;
     border: 1px solid var(--beige-mid);
@@ -546,6 +649,45 @@
     transition: border-color 0.3s, box-shadow 0.3s;
     animation: card-in 0.4s ease forwards;
   }
+
+  /* Discurso EN DIRECTO: destacado, siempre desplegado, sin chevron. */
+  .speech-card.is-live {
+    border: 2px solid var(--olive-mid);
+    background: linear-gradient(180deg, #fdfbf6 0%, white 60%);
+    box-shadow: 0 4px 22px rgba(74,86,56,0.12);
+    margin-bottom: 0;
+  }
+  .speech-card.is-live .speech-card-header {
+    cursor: default;
+    padding-top: 0.5rem;
+  }
+  .speech-card.is-live .chevron { display: none; }
+  .speech-card.is-live .speech-body-wrap { grid-template-rows: 1fr !important; }
+  .speech-card.is-live .live-card-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(192,57,43,0.92);
+    color: white;
+    padding: 0.22rem 0.7rem;
+    border-radius: 14px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin: 0.55rem 1.1rem 0;
+    width: fit-content;
+    box-shadow: 0 3px 10px rgba(192,57,43,0.25);
+  }
+  .speech-card.is-live .live-card-badge .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ff4f3a;
+    animation: live-pulse 1.4s ease-in-out infinite;
+  }
+  .live-card-badge { display: none; }
   @keyframes card-in {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -592,41 +734,8 @@
   }
   .speech-card.expanded .chevron { transform: rotate(-135deg); margin-top: 6px; }
 
-  .lang-toggle {
-    display: flex;
-    background: var(--beige-light);
-    border-radius: 20px;
-    padding: 2px;
-    gap: 2px;
-    border: 1px solid var(--beige-mid);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    flex-shrink: 0;
-  }
-  .speech-card.expanded .lang-toggle {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  .lang-btn {
-    background: none;
-    border: none;
-    padding: 3px 9px;
-    border-radius: 16px;
-    font-family: 'Jost', sans-serif;
-    font-size: 0.6rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-light);
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-  }
-  .lang-btn.active {
-    background: white;
-    color: var(--olive-dark);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  }
+  /* Toggle local por card — eliminado. El idioma se controla globalmente desde el header. */
+  .lang-toggle, .lang-btn { display: none !important; }
 
   .speech-body-wrap {
     display: grid;
@@ -644,8 +753,9 @@
     line-height: 1.78;
     color: var(--text-mid);
   }
+  /* Visibilidad de speech-text controlada por body[data-lang] arriba. */
   .speech-text { display: none; }
-  .speech-text.active { display: block; }
+  .speech-text p { margin-bottom: .6em; }
 
   .empty-state {
     text-align: center;
@@ -709,6 +819,55 @@
     transform: translateX(-50%) translateY(0);
   }
 
+  /* ─── RINGS VIEW (momento anillos) ─── */
+  #rings-view {
+    display: none;
+    flex: 1;
+    min-height: 100vh;
+    min-height: 100dvh;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+    background: var(--cream);
+    animation: rings-fade-in 0.9s ease both;
+  }
+  body[data-ceremony="rings"] .main-header,
+  body[data-ceremony="rings"] .pot-section,
+  body[data-ceremony="rings"] .live-speech-section,
+  body[data-ceremony="rings"] .speeches-section { display: none !important; }
+  body[data-ceremony="rings"] #rings-view { display: flex; }
+
+  .rings-svg {
+    width: min(420px, 78vw);
+    height: auto;
+    filter: drop-shadow(0 18px 28px rgba(168,133,47,0.22));
+  }
+  .rings-svg .ring-stroke { animation: ring-shimmer 4.5s ease-in-out infinite; }
+  .rings-svg .ring-highlight { animation: ring-highlight-pulse 4s ease-in-out infinite; }
+
+  @keyframes rings-fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes ring-shimmer {
+    0%, 100% { filter: none; }
+    50%      { filter: drop-shadow(0 0 6px rgba(232,210,138,0.7)); }
+  }
+  @keyframes ring-highlight-pulse {
+    0%, 100% { opacity: 0.45; }
+    50%      { opacity: 0.85; }
+  }
+
+  /* En estado 'rings' el main-view sigue como flex container para centrar #rings-view */
+  body[data-ceremony="rings"] #main-view {
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  /* Cuando la ceremonia ha terminado, ocultar todo lo que no sea landing. */
+  body[data-ceremony="ended"] #main-view { display: none !important; }
 
 </style>
 <!-- Firebase SDK -->
@@ -741,12 +900,24 @@
           </div>
         </div>
         <div class="card-front-bottom">
+          <span class="live-banner-pill" id="live-banner">
+            <span class="live-dot"></span>
+            <span>● En directo · Live now</span>
+          </span>
           <button type="button" class="memory-button" id="open-message-btn">
-            <span class="btn-lang-wrap">
+            <span class="btn-lang-wrap" id="btn-default-text">
               <span class="btn-es">Déjanos un mensaje</span>
               <span class="btn-en">Leave a message</span>
             </span>
+            <span class="btn-lang-wrap" id="btn-live-text" style="display:none">
+              <span class="btn-es">Ir a la ceremonia</span>
+              <span class="btn-en">Go to ceremony</span>
+            </span>
           </button>
+          <div class="ended-message">
+            La ceremonia ha terminado
+            <small>The ceremony has ended</small>
+          </div>
         </div>
       </div>
 
@@ -763,13 +934,6 @@
           <h2>Un mensaje · A message</h2>
           <form id="memory-form" autocomplete="off">
             <input type="text" id="guest-name" class="name-input" placeholder="Tu nombre · Your name" maxlength="60" required>
-
-            <div class="editor-toolbar">
-              <div class="emoji-container">
-                <button type="button" id="emoji-btn" class="toolbar-btn" title="Añadir emoji">😊</button>
-                <div id="emoji-panel" class="emoji-panel"></div>
-              </div>
-            </div>
 
             <div id="message-box" class="editable" contenteditable="true" spellcheck="false" data-placeholder="Tu mensaje · Your message"></div>
             <div id="char-counter" class="char-counter">0 / 500</div>
@@ -794,7 +958,14 @@
   <div class="main-header">
     <h1>Manu <span style="font-style:normal">&amp;</span> Dani</h1>
     <p>06 · 06 · 2026</p>
+    <div class="global-lang-toggle" id="global-lang-toggle" role="tablist" aria-label="Language">
+      <button type="button" data-lang="es" role="tab">ES</button>
+      <button type="button" data-lang="en" role="tab" class="active">EN</button>
+    </div>
   </div>
+
+  <!-- Discurso EN DIRECTO (sólo se renderiza si liveSpeechId no es null) -->
+  <div class="live-speech-section" id="live-speech-container"></div>
 
   <div class="pot-section">
     <div class="pot-wrapper" id="pot-wrapper">
@@ -963,16 +1134,68 @@
   </div>
 
   <div class="speeches-section">
-    <div class="speeches-title">Discursos · Speeches</div>
+    <div class="speeches-title">
+      <span data-bilang="es">Discursos pasados</span>
+      <span data-bilang="en">Past speeches</span>
+    </div>
     <div id="speeches-container">
       <div class="empty-state" id="empty-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <circle cx="12" cy="12" r="10"/>
           <path d="M12 8v4M12 16h.01"/>
         </svg>
-        <p>Los discursos aparecerán aquí · Speeches will appear here</p>
+        <p>
+          <span data-bilang="es">Los discursos aparecerán aquí</span>
+          <span data-bilang="en">Speeches will appear here</span>
+        </p>
       </div>
     </div>
+  </div>
+
+  <!-- ─── RINGS VIEW (momento anillos) ─── -->
+  <div id="rings-view">
+    <svg class="rings-svg" viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"  stop-color="#e8d28a"/>
+          <stop offset="50%" stop-color="#c9a961"/>
+          <stop offset="100%" stop-color="#a8852f"/>
+        </linearGradient>
+        <linearGradient id="goldGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"  stop-color="#f0d98f"/>
+          <stop offset="50%" stop-color="#cdaa5b"/>
+          <stop offset="100%" stop-color="#9c7b2a"/>
+        </linearGradient>
+        <clipPath id="ring-cross-clip">
+          <!-- Banda inferior por la que el anillo izquierdo pasa POR DELANTE en el cruce -->
+          <rect x="148" y="138" width="34" height="36"/>
+        </clipPath>
+      </defs>
+
+      <!-- Sombra suave del suelo -->
+      <ellipse cx="160" cy="195" rx="98" ry="6" fill="rgba(0,0,0,0.10)"/>
+
+      <!-- Anillo derecho (queda detrás en el cruce inferior) -->
+      <ellipse class="ring-stroke" cx="195" cy="110" rx="58" ry="56"
+               fill="none" stroke="url(#goldGrad2)" stroke-width="4.5"/>
+
+      <!-- Anillo izquierdo (entero, pasa por delante en arriba y abajo del cruce) -->
+      <ellipse class="ring-stroke" cx="125" cy="110" rx="58" ry="56"
+               fill="none" stroke="url(#goldGrad)" stroke-width="4.5"/>
+
+      <!-- Re-pinta el arco SUPERIOR del anillo derecho por encima del izquierdo
+           para crear el efecto entrelazado -->
+      <g clip-path="url(#ring-cross-clip)">
+        <ellipse class="ring-stroke" cx="195" cy="110" rx="58" ry="56"
+                 fill="none" stroke="url(#goldGrad2)" stroke-width="4.5"/>
+      </g>
+
+      <!-- Brillo sutil arriba (highlight) -->
+      <path class="ring-highlight" d="M 92 88 A 58 56 0 0 1 130 62"
+            fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.6" stroke-linecap="round"/>
+      <path class="ring-highlight" d="M 162 88 A 58 56 0 0 1 200 62"
+            fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.4" stroke-linecap="round"/>
+    </svg>
   </div>
 </div>
 
@@ -981,24 +1204,33 @@
    DATA
 ═══════════════════════ */
 const SPEECHES = [
-  { id: 1, speaker: "Familia",      role: "Familia · Family",                     layer: "rocks",
-    es: "Discurso en directo.",
-    en: "Live speech." },
-  { id: 2, speaker: "Celia",        role: "Amigos de Manu · Manu's friends",      layer: "soil",
-    es: "Discurso en directo.",
-    en: "Live speech." },
-  { id: 3, speaker: "Sol",          role: "Amigos de Dani · Dani's friends",      layer: "perlite",
-    es: "Discurso en directo.",
-    en: "Live speech." },
-  { id: 4, speaker: "Celia",        role: "Amigos en común · Common friends",     layer: "coconut",
-    es: "Discurso en directo.",
-    en: "Live speech." },
-  { id: 5, speaker: "Pree & Dom",   role: "Amigos internacionales · International friends", layer: "pine",
-    es: "Discurso en directo.",
-    en: "Live speech." },
-  { id: 6, speaker: "Manu & Dani",  role: "Los novios · The couple",              layer: "seeds",
-    es: "Discurso en directo.",
-    en: "Live speech." }
+  { id: 1, speaker: "Familia", role: "Familia · Family", layer: "rocks",
+    es: "Hay personas que llegan a tu vida cuando ya está todo decidido, y hay personas que están desde el primer día, sosteniéndote sin que ni siquiera te des cuenta. Esa es nuestra familia. Los que nos enseñaron a andar, a caer y a levantarnos otra vez. Los que aplaudieron nuestros pequeños logros como si fueran imposibles, y los que se quedaron en silencio cuando hizo falta.\n\nHoy os miramos y entendemos que todo lo que somos lo somos porque vosotros nos disteis la base. Las raíces. La piedra firme sobre la que construir cualquier cosa. Manu y Dani: estas piedras que rellenan vuestra maceta sois vosotros mismos, sostenidos por todos los que os han querido sin condiciones desde antes de que supierais que existíais.\n\nQue no se os olvide nunca de dónde venís. Y que sepáis que, pase lo que pase, esa base siempre estará ahí.",
+    en: "Some people enter your life when everything is already decided. Others have been there since day one, holding you up without you even realizing it. That's our family. The ones who taught us to walk, to fall, and to get back up again. The ones who applauded our small victories as if they were impossible, and the ones who stayed quiet when silence was what we needed.\n\nToday we look at you and we understand that everything we are, we are because you gave us the foundation. The roots. The firm stone on which to build anything. Manu and Dani: these stones filling your pot are you yourselves, held up by everyone who loved you unconditionally before you even knew you existed.\n\nMay you never forget where you come from. And may you know that, no matter what happens, that foundation will always be there." },
+
+  { id: 2, speaker: "Celia", role: "Amigos de Manu · Manu's friends", layer: "soil",
+    es: "A Manu lo conocimos cuando todavía no sabía que iba a ser quien es. Era ese chaval que aparecía con una idea cada cinco minutos, que se reía de todo y de sí mismo el primero, que escuchaba con una atención que daba un poco de vértigo. Y así sigue siendo, solo que ahora con menos pelo y más responsabilidades.\n\nLa tierra que ponemos hoy en esta maceta es la que sostiene todo lo que crece después. Es donde echamos raíces los amigos. Donde aprendimos a discutir sin enfadarnos, a pedir perdón sin orgullo, a estar presentes incluso cuando la vida nos llevaba a sitios distintos.\n\nDani: cuídale, pero no demasiado. Necesita un poco de caos para seguir siendo Manu. Y Manu: gracias por dejarnos ser parte de esta tierra fértil de la que nace todo lo demás.",
+    en: "We met Manu before he knew who he was going to become. He was that kid who showed up with a new idea every five minutes, who laughed at everything and at himself first, who listened with an intensity that was almost dizzying. And he's still that guy, just with less hair and more responsibilities.\n\nThe soil we add today to this pot is what holds up everything that grows afterward. It's where friendships put down roots. Where we learned to argue without getting angry, to apologize without pride, to be present even when life pulled us in different directions.\n\nDani: take care of him, but not too much. He needs a little chaos to stay Manu. And Manu: thank you for letting us be part of this fertile soil from which everything else grows." },
+
+  { id: 3, speaker: "Sol", role: "Amigos de Dani · Dani's friends", layer: "perlite",
+    es: "Dani es como la perlita: a primera vista parece que no hace nada, pero sin ella todo se asfixia. Es la que se acuerda de tu cumpleaños cuando ni tú te acuerdas, la que pregunta cómo estás de verdad, la que se queda hasta tarde escuchando aunque por la mañana tenga mil cosas que hacer.\n\nDani enseña sin enseñar. Con su forma de tomarse las cosas, de dejar espacio, de no juzgar. Nos ha hecho mejores amigas, mejores hijas, mejores hermanas. Y estamos seguras de que va a hacer de Manu el mejor compañero que pueda ser, porque eso es lo que hace contigo: te deja sitio para crecer y respirar.\n\nManu: el regalo que te llevas es enorme. Trátalo como lo más valioso que tienes, porque lo es. Y a nosotras no se te ocurra quitárnosla, que también es un poquito nuestra.",
+    en: "Dani is like perlite: at first glance it looks like she's doing nothing, but without her everything suffocates. She's the one who remembers your birthday when you don't, who asks how you're really doing, who stays up late listening even when she has a thousand things to do the next morning.\n\nDani teaches without teaching. With her way of taking things in stride, leaving space, not judging. She has made us better friends, better daughters, better sisters. And we are absolutely sure she's going to make Manu the best partner he can be, because that's what she does with you: she leaves you room to grow and to breathe.\n\nManu: the gift you're receiving is enormous. Treat her like the most valuable thing you have, because she is. And don't even think about keeping her all to yourself — she's a little bit ours too." },
+
+  { id: 4, speaker: "Celia", role: "Amigos en común · Common friends", layer: "coconut",
+    es: "La fibra de coco es esa capa que nadie ve pero que mantiene la humedad, la temperatura, el equilibrio. Es exactamente lo que hicieron Manu y Dani con nosotros desde que empezaron a estar juntos: nos juntaron a todos sin que nos diéramos cuenta.\n\nDe repente, los amigos de Manu y los amigos de Dani éramos los amigos de los dos. Cumpleaños mezclados, viajes mezclados, cenas que duraban hasta las cuatro de la mañana. Una red de gente que no tendría ninguna razón para conocerse si ellos dos no se hubieran encontrado. Y ahora ya no se entiende a unos sin los otros.\n\nManu y Dani: gracias por construirnos esta familia elegida. Por dejarnos estar dentro. Por hacernos sentir que vuestra historia también es un poco la nuestra.",
+    en: "Coconut fiber is that layer no one really sees, but it holds the moisture, the temperature, the balance. That's exactly what Manu and Dani did to us from the moment they got together: they brought us all together without us even noticing.\n\nSuddenly, Manu's friends and Dani's friends were the friends of both. Birthdays merged, trips merged, dinners stretched until four in the morning. A web of people who had no reason to know each other if these two hadn't met. And now it's impossible to picture some of us without the others.\n\nManu and Dani: thank you for building this chosen family. For letting us in. For making us feel that your story is also a little bit ours." },
+
+  { id: 5, speaker: "Pree & Dom", role: "Amigos internacionales · International friends", layer: "pine",
+    es: "We came from far to be here today. From a place where Manu and Dani are not just two people we know, but two people who changed how we see Spain, how we see love, and honestly, how we see ourselves when we are together with them.\n\nLa corteza de pino protege. Es la capa que defiende a la planta del frío, del viento, de las cosas que vienen de fuera. Nosotros somos los que vinimos de fuera y, sin embargo, nunca nos sentimos fuera. Manu y Dani nos abrieron su casa, su gente, su idioma. Nos enseñaron canciones que no entendíamos pero que cantamos a gritos igualmente.\n\nManu, Dani: you taught us that home is not a place, it's the people who wait for you with the table already set. Gracias por hacernos sentir en casa cada vez que cruzamos el océano para estar con vosotros.",
+    en: "We came from far to be here today. From a place where Manu and Dani are not just two people we know, but two people who changed how we see Spain, how we see love, and honestly, how we see ourselves when we are together with them.\n\nPine bark protects. It's the layer that defends the plant from cold, from wind, from everything that comes from outside. We are the ones who came from outside, and yet, we have never felt outside. Manu and Dani opened their home to us, their people, their language. They taught us songs we didn't understand but we sang at the top of our lungs anyway.\n\nManu, Dani: you taught us that home is not a place, it's the people who wait for you with the table already set. Thank you for making us feel at home every time we cross the ocean to be with you." },
+
+  { id: 6, speaker: "Manu", role: "Los novios · The couple", layer: null,
+    es: "Dani, llevo días intentando escribir esto sin que se note que se me caen las lágrimas, y he renunciado. Así que asumamos las lágrimas como parte del paquete.\n\nDesde que te conocí, todo lo que era ruido empezó a tener sentido. No porque tú lo arreglaras, sino porque a tu lado dejé de necesitar arreglar tantas cosas. Me enseñaste a parar. A escuchar de verdad. A reírme sin ironía, que es algo que no sabía hacer hasta que apareciste tú.\n\nPrometo elegirte cada mañana, incluso las mañanas en las que cueste. Prometo no dar nada por sentado. Prometo discutir contigo sin perderte de vista, y reírme contigo aunque ya nos hayamos contado el chiste mil veces. Prometo construir contigo una vida que merezca la pena ser vivida despacio.\n\nTe quiero. Y desde hoy, oficialmente, para siempre.",
+    en: "Dani, I've spent days trying to write this without anyone noticing my eyes are watering, and I've given up. So let's just assume the tears are part of the package.\n\nFrom the moment I met you, everything that used to be noise started to make sense. Not because you fixed it, but because next to you I stopped needing to fix so many things. You taught me to stop. To listen, really listen. To laugh without irony, which is something I didn't know how to do until you showed up.\n\nI promise to choose you every morning, even the mornings when it's hard. I promise to never take anything for granted. I promise to argue with you without losing sight of you, and to laugh with you even when we've told the same joke a thousand times. I promise to build a life with you that is worth living slowly.\n\nI love you. And from today, officially, forever." },
+
+  { id: 7, speaker: "Dani", role: "Los novios · The couple", layer: null,
+    es: "Manu, dijiste que asumiéramos las lágrimas y aquí estamos. Vale.\n\nNo sé exactamente cuándo me enamoré de ti, pero sí sé cuándo lo supe. Fue un martes cualquiera, ni una cena romántica ni un viaje ni nada especial. Estábamos haciendo cualquier tontería en casa y pensé: este es el sitio. Esta es la persona con la que quiero hacer todas las cosas pequeñas que componen una vida.\n\nPorque tú haces que lo grande parezca sencillo y que lo pequeño se vuelva sagrado. Me has enseñado que querer no es agarrar fuerte, es dejar espacio. Que la complicidad no se construye con grandes gestos, sino con miles de pequeñas decisiones de estar.\n\nPrometo seguir eligiéndote también yo, cada día. Prometo cuidar de ti incluso cuando no me dejes. Prometo recordarte quién eres cuando se te olvide, y dejarme recordar por ti cuando me olvide yo. Prometo no soltarte la mano. Te quiero, Manu. Vamos.",
+    en: "Manu, you said we should assume the tears, and here we are. Fine.\n\nI don't know exactly when I fell in love with you, but I do know when I realized it. It was a random Tuesday, no romantic dinner, no trip, nothing special. We were doing some silly thing at home and I thought: this is the place. This is the person I want to do all the small things that make up a life with.\n\nBecause you make the big stuff seem simple and you make the small stuff feel sacred. You taught me that loving someone isn't about holding on tight, it's about leaving space. That intimacy isn't built with grand gestures, but with thousands of tiny decisions to show up.\n\nI promise to keep choosing you too, every day. I promise to take care of you even when you don't let me. I promise to remind you who you are when you forget, and to let you remind me when I do. I promise not to let go of your hand. I love you, Manu. Let's go." }
 ];
 
 const LAYER_ORDER = ['rocks','soil','perlite','coconut','pine','seeds'];
@@ -1237,53 +1469,78 @@ async function playLayerCeremony(layer) {
 function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 /* ═══════════════════════
-   ACCORDION
+   RENDER (live + pasados)
 ═══════════════════════ */
 let expandedIds = new Set();
-let prevActiveIds = [];
 
-function renderSpeeches(activeIds) {
-  const container = document.getElementById('speeches-container');
-  const newlyAdded = activeIds.filter(id => !prevActiveIds.includes(id));
-
-  // Auto-expand newest
-  newlyAdded.forEach(id => expandedIds.add(id));
-
-  if (activeIds.length === 0) {
+function renderLiveSpeech(liveId) {
+  const container = document.getElementById('live-speech-container');
+  if (!container) return;
+  if (liveId == null) {
     container.innerHTML = '';
-    container.appendChild(createEmptyState());
-    prevActiveIds = [...activeIds];
     return;
   }
-
+  const speech = SPEECHES.find(s => s.id === liveId);
+  if (!speech) {
+    container.innerHTML = '';
+    return;
+  }
   container.innerHTML = '';
-  SPEECHES.filter(s => activeIds.includes(s.id)).forEach(speech => {
-    container.appendChild(createCard(speech, expandedIds.has(speech.id)));
+  container.appendChild(createCard(speech, { isLive: true, expanded: true }));
+}
+
+function renderPastSpeeches(pastIds) {
+  const container = document.getElementById('speeches-container');
+  if (!container) return;
+  if (!pastIds || pastIds.length === 0) {
+    container.innerHTML = '';
+    container.appendChild(createEmptyState());
+    return;
+  }
+  container.innerHTML = '';
+  // Más reciente arriba: invertir el array de pastSpeeches (que viene en orden de finalización)
+  const ordered = [...pastIds].reverse();
+  ordered.forEach(id => {
+    const speech = SPEECHES.find(s => s.id === id);
+    if (!speech) return;
+    container.appendChild(createCard(speech, { isLive: false, expanded: expandedIds.has(speech.id) }));
   });
-  prevActiveIds = [...activeIds];
 }
 
 function createEmptyState() {
   const d = document.createElement('div');
   d.className = 'empty-state'; d.id = 'empty-state';
-  d.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><p>Los discursos aparecerán aquí · Speeches will appear here</p>`;
+  d.innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M12 8v4M12 16h.01"/>
+    </svg>
+    <p>
+      <span data-bilang="es">Los discursos aparecerán aquí</span>
+      <span data-bilang="en">Speeches will appear here</span>
+    </p>`;
   return d;
 }
 
-function createCard(speech, expanded) {
+function createCard(speech, opts) {
+  opts = opts || {};
+  const isLive = !!opts.isLive;
+  const expanded = isLive ? true : !!opts.expanded;
+
   const card = document.createElement('div');
-  card.className = `speech-card${expanded ? ' expanded' : ''}`;
+  card.className = `speech-card${expanded ? ' expanded' : ''}${isLive ? ' is-live' : ''}`;
   card.id = `speech-card-${speech.id}`;
 
+  const liveBadge = isLive
+    ? `<div class="live-card-badge"><span class="live-dot"></span><span>● En directo · Live now</span></div>`
+    : '';
+
   card.innerHTML = `
+    ${liveBadge}
     <div class="speech-card-header">
       <div class="speech-meta">
         <div class="speech-speaker">${speech.speaker}</div>
         <div class="speech-role">${speech.role}</div>
-      </div>
-      <div class="lang-toggle">
-        <button class="lang-btn active" data-lang="es">ES</button>
-        <button class="lang-btn"        data-lang="en">EN</button>
       </div>
       <div class="chevron"></div>
     </div>
@@ -1291,83 +1548,181 @@ function createCard(speech, expanded) {
       <div class="speech-body-inner">
         <div class="speech-divider"></div>
         <div class="speech-body">
-          <div class="speech-text active" data-lang="es">${fmt(speech.es)}</div>
-          <div class="speech-text"        data-lang="en">${fmt(speech.en)}</div>
+          <div class="speech-text" data-lang="es">${fmt(speech.es)}</div>
+          <div class="speech-text" data-lang="en">${fmt(speech.en)}</div>
         </div>
       </div>
     </div>`;
 
-  // Header click toggles expansion
-  card.querySelector('.speech-card-header').addEventListener('click', e => {
-    if (e.target.classList.contains('lang-btn')) return;
-    const isExpanded = card.classList.toggle('expanded');
-    if (isExpanded) expandedIds.add(speech.id); else expandedIds.delete(speech.id);
-  });
-
-  card.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.stopPropagation();
-      card.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      card.querySelectorAll('.speech-text').forEach(t => {
-        t.classList.toggle('active', t.dataset.lang === btn.dataset.lang);
-      });
+  if (!isLive) {
+    card.querySelector('.speech-card-header').addEventListener('click', () => {
+      const nowExpanded = card.classList.toggle('expanded');
+      if (nowExpanded) expandedIds.add(speech.id); else expandedIds.delete(speech.id);
     });
-  });
+  }
 
   return card;
 }
 
 function fmt(text) {
-  return (text || '').split('\n\n').map(p => `<p style="margin-bottom:.6em">${p}</p>`).join('');
+  return (text || '').split('\n\n').map(p => `<p>${escapeHtml(p).replace(/\n/g, '<br>')}</p>`).join('');
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 }
 
 /* ═══════════════════════
    STATE / ROUTING
 ═══════════════════════ */
-let state = { page: 'landing', activeSpeeches: [], filledLayers: [] };
+let state = {
+  ceremonyStatus: 'pre',   // 'pre' | 'live' | 'rings' | 'ended'
+  liveSpeechId:   null,
+  pastSpeeches:   [],
+  filledLayers:   []
+};
+let viewport = 'landing';  // 'landing' | 'main'
 
 function setView(v) {
+  viewport = v;
   document.getElementById('landing').style.display    = v === 'landing' ? 'flex' : 'none';
   document.getElementById('main-view').style.display  = v === 'main'    ? 'flex' : 'none';
+  applyScrollLock();
+}
+
+function applyScrollLock() {
+  // Sin scroll en landing y form de mensaje. Permitido en main view (excepto cuando rings, controlado por CSS).
+  const lock = viewport === 'landing';
+  document.body.classList.toggle('no-scroll', lock);
+  document.documentElement.classList.toggle('lock-scroll', lock);
+}
+
+// Migración del modelo antiguo si Firebase aún devuelve `{ page, activeSpeeches, filledLayers }`.
+function migrateRemoteState(remote) {
+  if (!remote) return null;
+  // Modelo nuevo
+  if (remote.ceremonyStatus) {
+    return {
+      ceremonyStatus: remote.ceremonyStatus,
+      liveSpeechId:   remote.liveSpeechId == null ? null : remote.liveSpeechId,
+      pastSpeeches:   Array.isArray(remote.pastSpeeches) ? remote.pastSpeeches : [],
+      filledLayers:   Array.isArray(remote.filledLayers) ? remote.filledLayers : []
+    };
+  }
+  // Modelo antiguo → mapear
+  const active = Array.isArray(remote.activeSpeeches) ? remote.activeSpeeches : [];
+  return {
+    ceremonyStatus: remote.page === 'main' ? 'live' : 'pre',
+    liveSpeechId:   active.length ? active[active.length - 1] : null,
+    pastSpeeches:   active.slice(0, -1),
+    filledLayers:   Array.isArray(remote.filledLayers) ? remote.filledLayers : []
+  };
 }
 
 let initialStateLoaded = false;
 
 function applyState(s) {
-  const newPage = s.page === 'main' ? 'main' : 'landing';
-  setView(newPage);
+  if (!s) return;
+  state = s;
 
-  renderSpeeches(s.activeSpeeches || []);
+  // Atributo en body para que el CSS reaccione.
+  document.body.setAttribute('data-ceremony', s.ceremonyStatus);
 
+  // El flip card podría no estar disponible aún si applyState corre muy temprano; coger por id.
+  const fc = document.getElementById('flip-card');
+
+  // Decidir qué viewport corresponde según el estado actual y lo que estaba el usuario haciendo.
+  // - 'pre'   → landing siempre.
+  // - 'live'  → respetamos viewport actual (puede estar en landing leyendo, en form, o en main).
+  // - 'rings' → forzar main (excepto si está en el form: que termine).
+  // - 'ended' → forzar landing y cerrar form si estaba abierto.
+  if (s.ceremonyStatus === 'pre') {
+    if (viewport !== 'landing') setView('landing');
+    if (fc) fc.classList.remove('is-flipped');
+  } else if (s.ceremonyStatus === 'ended') {
+    // Sacar a todo el mundo a landing. Si estaba en el form, deshacer flip.
+    if (fc) fc.classList.remove('is-flipped');
+    if (viewport !== 'landing') setView('landing');
+  } else if (s.ceremonyStatus === 'rings') {
+    // Solo forzar main si no está rellenando el form (back de la card).
+    const inForm = fc && fc.classList.contains('is-flipped');
+    if (!inForm && viewport !== 'main') setView('main');
+  }
+
+  // Botón landing según ceremonia.
+  updateLandingButton();
+
+  // Render del main view.
+  renderLiveSpeech(s.liveSpeechId);
+  renderPastSpeeches(s.pastSpeeches);
+
+  // Maceta con animación de capa.
   const newFilled = s.filledLayers || [];
-
-  // First time we receive any remote state: just render layers, no animation.
   if (!initialStateLoaded) {
     renderLayers(newFilled);
     prevFilledLayers = [...newFilled];
     initialStateLoaded = true;
+    applyScrollLock();
     return;
   }
 
-  // Detect new filled layer → ceremony animation
   const justAdded = newFilled.find(l => !prevFilledLayers.includes(l));
-  if (justAdded && newPage === 'main') {
+  if (justAdded && viewport === 'main' && s.ceremonyStatus !== 'rings') {
     prevFilledLayers = [...newFilled];
     playLayerCeremony(justAdded);
   } else {
     renderLayers(newFilled);
     prevFilledLayers = [...newFilled];
   }
+
+  applyScrollLock();
+}
+
+function updateLandingButton() {
+  const defaultText = document.getElementById('btn-default-text');
+  const liveText    = document.getElementById('btn-live-text');
+  if (!defaultText || !liveText) return;
+  const showLive = state.ceremonyStatus === 'live' || state.ceremonyStatus === 'rings';
+  defaultText.style.display = showLive ? 'none' : '';
+  liveText.style.display    = showLive ? '' : 'none';
 }
 
 const channel = new BroadcastChannel('wedding-channel');
-channel.onmessage = e => applyState(e.data);
+channel.onmessage = e => applyState(migrateRemoteState(e.data) || e.data);
 
-// Initial render before any remote state arrives — landing only, no animation.
+// Render inicial antes de recibir estado remoto.
 setView('landing');
-renderSpeeches([]);
+renderLiveSpeech(null);
+renderPastSpeeches([]);
 renderLayers([]);
+document.body.setAttribute('data-ceremony', 'pre');
+
+/* ═══════════════════════
+   TOGGLE GLOBAL DE IDIOMA
+═══════════════════════ */
+const LANG_KEY = 'wedding-lang';
+function setLang(lang) {
+  const l = lang === 'es' ? 'es' : 'en';
+  document.body.setAttribute('data-lang', l);
+  try { localStorage.setItem(LANG_KEY, l); } catch (e) {}
+  const toggle = document.getElementById('global-lang-toggle');
+  if (toggle) {
+    toggle.querySelectorAll('button').forEach(b => {
+      b.classList.toggle('active', b.dataset.lang === l);
+    });
+  }
+}
+const initialLang = (function() {
+  try { return localStorage.getItem(LANG_KEY) || 'en'; } catch (e) { return 'en'; }
+})();
+setLang(initialLang);
+document.addEventListener('click', e => {
+  const btn = e.target.closest('#global-lang-toggle button');
+  if (btn) setLang(btn.dataset.lang);
+});
 
 // ─── FIREBASE ───
 const firebaseConfig = {
@@ -1390,13 +1745,8 @@ const CLOUDINARY_UPLOAD_PRESET = 'wedding_unsigned';
 
 rtdb.ref('weddingState').on('value', (snapshot) => {
   const remote = snapshot.val();
-  if (remote) {
-    applyState({
-      page: remote.page || 'landing',
-      activeSpeeches: remote.activeSpeeches || [],
-      filledLayers: remote.filledLayers || []
-    });
-  }
+  const next = migrateRemoteState(remote);
+  if (next) applyState(next);
 });
 
 /* ═══════════════════════
@@ -1409,8 +1759,6 @@ const memoryForm    = document.getElementById('memory-form');
 const guestNameEl   = document.getElementById('guest-name');
 const messageBox    = document.getElementById('message-box');
 const charCounter   = document.getElementById('char-counter');
-const emojiBtn      = document.getElementById('emoji-btn');
-const emojiPanel    = document.getElementById('emoji-panel');
 const uploadBtn     = document.getElementById('upload-photo-button');
 const photoInput    = document.getElementById('photo-upload');
 const previewBox    = document.getElementById('image-preview-container');
@@ -1425,6 +1773,15 @@ function doFlip() {
 }
 
 openMsgBtn.addEventListener('click', () => {
+  // Si la ceremonia está en directo (o en momento anillos), el botón lleva al main view.
+  if (state.ceremonyStatus === 'live' || state.ceremonyStatus === 'rings') {
+    setView('main');
+    return;
+  }
+  // Si ya ha terminado, no hacer nada (el CSS lo oculta, pero por si acaso).
+  if (state.ceremonyStatus === 'ended') return;
+
+  // Estado 'pre': abrir el form como hasta ahora.
   memoryForm.reset();
   messageBox.innerHTML = '';
   selectedFiles = [];
@@ -1439,29 +1796,6 @@ openMsgBtn.addEventListener('click', () => {
 });
 
 backBtn.addEventListener('click', doFlip);
-
-// Emoji panel
-const EMOJIS = ["❤️","😂","🎉","🥳","🥰","🥂","💃","🕺","✨","👍","🙏","😊","😎","💖","😍","🔥","💍","💒","🎂","🎈","🎁","📷","💌","🌟","💐","🍷","🍰","🎊","🤩","🙌"];
-EMOJIS.forEach(em => {
-  const b = document.createElement('button');
-  b.type = 'button';
-  b.textContent = em;
-  b.addEventListener('click', () => {
-    messageBox.focus();
-    document.execCommand('insertText', false, em);
-    emojiPanel.classList.remove('show');
-  });
-  emojiPanel.appendChild(b);
-});
-emojiBtn.addEventListener('click', e => {
-  e.stopPropagation();
-  emojiPanel.classList.toggle('show');
-});
-document.addEventListener('click', e => {
-  if (!emojiPanel.contains(e.target) && e.target !== emojiBtn) {
-    emojiPanel.classList.remove('show');
-  }
-});
 
 // Char counter
 function updateCharCounter() {

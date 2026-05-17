@@ -720,6 +720,174 @@
     border: 1px dashed var(--beige-mid);
     border-radius: 12px;
   }
+
+  /* ─── CEREMONY CONTROL ─── */
+  .ceremony-control {
+    background: white;
+    border: 1px solid var(--beige-mid);
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem 1.2rem;
+  }
+  .ceremony-status-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.9rem;
+  }
+  .ceremony-status-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-light);
+  }
+  .ceremony-status-chip {
+    display: inline-flex;
+    align-items: center;
+    background: var(--beige-light);
+    border: 1px solid var(--beige-mid);
+    color: var(--text-mid);
+    border-radius: 16px;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .ceremony-status-chip[data-status="live"]  { background: rgba(192,57,43,0.12); border-color: rgba(192,57,43,0.35); color: #c0392b; }
+  .ceremony-status-chip[data-status="rings"] { background: #fff6dd; border-color: #cdaa5b; color: #8a6a18; }
+  .ceremony-status-chip[data-status="ended"] { background: #efeae3; border-color: var(--beige-dark); color: var(--text-mid); }
+
+  .ceremony-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .cer-btn {
+    flex: 1;
+    min-width: 150px;
+    background: white;
+    color: var(--text-mid);
+    border: 1px solid var(--beige-mid);
+    border-radius: 22px;
+    padding: 0.62rem 0.9rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s, border-color 0.2s;
+  }
+  .cer-btn:hover:not(:disabled) { background: var(--beige-light); }
+  .cer-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .cer-btn-primary { background: var(--olive-dark); color: var(--cream); border-color: var(--olive-dark); }
+  .cer-btn-primary:hover:not(:disabled) { background: var(--olive-mid); }
+  .cer-btn-rings   { background: #c9a961; color: white; border-color: #b08e3f; }
+  .cer-btn-rings:hover:not(:disabled)   { background: #b08e3f; }
+  .cer-btn-end     { background: white; color: var(--danger); border-color: rgba(192,57,43,0.4); }
+  .cer-btn-end:hover:not(:disabled)     { background: rgba(192,57,43,0.08); border-color: var(--danger); }
+
+  .ceremony-help {
+    margin-top: 0.7rem;
+    font-size: 0.65rem;
+    color: var(--text-light);
+    letter-spacing: 0.04em;
+  }
+
+  /* ─── SPEECH FLOW BUTTONS (Empezar / Terminar) ─── */
+  .speech-master-card.is-live {
+    border-color: var(--olive-mid);
+    box-shadow: 0 0 0 3px rgba(138,154,106,0.18);
+  }
+  .speech-master-card.is-live::before { background: var(--olive-dark); }
+  .speech-master-card.is-done {
+    opacity: 0.72;
+    background: #fbf8f2;
+  }
+  .speech-master-card.is-done::before { background: var(--brown-mid); }
+
+  .speech-state-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 0.5rem;
+  }
+  .speech-state-badge.live { background: rgba(192,57,43,0.12); color: #c0392b; }
+  .speech-state-badge.live .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #c0392b;
+    animation: master-blink 1.4s ease-in-out infinite;
+  }
+  .speech-state-badge.done { background: #efeae3; color: var(--text-mid); }
+  .speech-state-badge.pending { background: var(--beige-light); color: var(--text-light); }
+
+  @keyframes master-blink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.3; }
+  }
+
+  .speech-flow-btn {
+    margin-top: 0.75rem;
+    margin-left: 34px;
+    background: var(--olive-dark);
+    color: var(--cream);
+    border: none;
+    border-radius: 18px;
+    padding: 0.5rem 1rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+  }
+  .speech-flow-btn:hover:not(:disabled) { background: var(--olive-mid); }
+  .speech-flow-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .speech-flow-btn.end-btn {
+    background: var(--danger);
+  }
+  .speech-flow-btn.end-btn:hover:not(:disabled) { background: #962f25; }
+  .speech-flow-btn.start-btn { background: var(--olive-dark); }
+
+  /* ─── SEEDS ACTION ─── */
+  .seeds-action-row {
+    background: white;
+    border: 1px solid var(--beige-mid);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  .seeds-btn {
+    background: var(--olive-dark);
+    color: var(--cream);
+    border: none;
+    border-radius: 22px;
+    padding: 0.7rem 1.4rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+  }
+  .seeds-btn:hover:not(:disabled) { background: var(--olive-mid); }
+  .seeds-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .seeds-btn.filled {
+    background: var(--brown-mid);
+    cursor: default;
+  }
+  .seeds-help {
+    margin-top: 0.55rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+    color: var(--text-light);
+  }
 </style>
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -765,25 +933,32 @@
       </div>
     </div>
 
-    <div class="section-title">Pantalla principal</div>
-    <div class="page-control" style="margin-bottom:2rem">
-      <div class="page-control-row">
-        <div class="page-control-info">
-          <h2><span class="status-dot" id="page-dot"></span>Mostrar discursos</h2>
-          <p id="page-desc">La pantalla muestra la portada</p>
-        </div>
-        <label class="toggle-switch">
-          <input type="checkbox" id="page-toggle">
-          <span class="toggle-track"></span>
-        </label>
+    <div class="section-title">Estado de la ceremonia</div>
+    <div class="ceremony-control" style="margin-bottom:2rem">
+      <div class="ceremony-status-row">
+        <span class="ceremony-status-label">Ahora mismo</span>
+        <span class="ceremony-status-chip" id="ceremony-status-chip" data-status="pre">PRE-BODA</span>
       </div>
+      <div class="ceremony-actions">
+        <button class="cer-btn cer-btn-primary" id="btn-start"   data-action="start">▶ Iniciar ceremonia</button>
+        <button class="cer-btn cer-btn-rings"   id="btn-rings"   data-action="rings">💍 Momento anillos</button>
+        <button class="cer-btn cer-btn-end"     id="btn-end"     data-action="end">✗ Terminar ceremonia</button>
+      </div>
+      <p class="ceremony-help" id="ceremony-help"></p>
     </div>
 
     <div class="section-title">Discursos</div>
     <div class="speeches-list" id="speeches-list"></div>
 
+    <div class="seeds-action-row">
+      <button class="seeds-btn" id="seeds-btn" disabled>
+        💚 Echar semillas juntos
+      </button>
+      <p class="seeds-help">Se habilita cuando Manu y Dani han terminado sus votos.</p>
+    </div>
+
     <div class="reset-row">
-      <button class="reset-btn" id="reset-layers-btn" title="Vacía la maceta del viewer">↺ Reiniciar capas</button>
+      <button class="reset-btn" id="reset-ceremony-btn" title="Reinicia toda la ceremonia y vacía la maceta">↺ Reiniciar ceremonia</button>
     </div>
   </div>
 
@@ -809,14 +984,39 @@ const SPEECHES = [
   { id: 3, speaker: "Sol",        role: "Amigos de Dani",           layer: "perlite", layerName: "Perlita" },
   { id: 4, speaker: "Celia",      role: "Amigos en común",          layer: "coconut", layerName: "Fibra de coco" },
   { id: 5, speaker: "Pree & Dom", role: "Amigos internacionales",   layer: "pine",    layerName: "Corteza de pino" },
-  { id: 6, speaker: "Manu & Dani",role: "Los novios",               layer: "seeds",   layerName: "Semillas" }
+  { id: 6, speaker: "Manu",       role: "Los novios",               layer: null,      layerName: null },
+  { id: 7, speaker: "Dani",       role: "Los novios",               layer: null,      layerName: null }
 ];
 
+// Layers que se rellenan automáticamente al terminar un discurso (los que tienen `layer`).
+// 'seeds' se rellena con la acción independiente "Echar semillas juntos".
+const ALL_LAYERS = ['rocks','soil','perlite','coconut','pine','seeds'];
+
 let state = {
-  page: 'landing',
-  activeSpeeches: [],
-  filledLayers: []
+  ceremonyStatus: 'pre',   // 'pre' | 'live' | 'rings' | 'ended'
+  liveSpeechId:   null,
+  pastSpeeches:   [],
+  filledLayers:   []
 };
+
+function migrateRemoteState(remote) {
+  if (!remote) return state;
+  if (remote.ceremonyStatus) {
+    return {
+      ceremonyStatus: remote.ceremonyStatus,
+      liveSpeechId:   remote.liveSpeechId == null ? null : remote.liveSpeechId,
+      pastSpeeches:   Array.isArray(remote.pastSpeeches) ? remote.pastSpeeches : [],
+      filledLayers:   Array.isArray(remote.filledLayers) ? remote.filledLayers : []
+    };
+  }
+  const active = Array.isArray(remote.activeSpeeches) ? remote.activeSpeeches : [];
+  return {
+    ceremonyStatus: remote.page === 'main' ? 'live' : 'pre',
+    liveSpeechId:   active.length ? active[active.length - 1] : null,
+    pastSpeeches:   active.slice(0, -1),
+    filledLayers:   Array.isArray(remote.filledLayers) ? remote.filledLayers : []
+  };
+}
 
 // ─── FIREBASE ───
 const firebaseConfig = {
@@ -847,11 +1047,39 @@ function renderList() {
   list.innerHTML = '';
 
   SPEECHES.forEach((speech, i) => {
-    const isActive = state.activeSpeeches.includes(speech.id);
-    const isFilled = state.filledLayers.includes(speech.layer);
+    const isLive    = state.liveSpeechId === speech.id;
+    const isDone    = state.pastSpeeches.includes(speech.id);
+    const isPending = !isLive && !isDone;
+    const layerFilled = !!speech.layer && state.filledLayers.includes(speech.layer);
+
     const card = document.createElement('div');
-    card.className = `speech-master-card${isActive ? ' active' : ''}${isFilled ? ' filled' : ''}`;
-    card.setAttribute('data-layer', speech.layer);
+    card.className = `speech-master-card${isLive ? ' is-live' : ''}${isDone ? ' is-done' : ''}`;
+    if (speech.layer) card.setAttribute('data-layer', speech.layer);
+
+    // Layer chip o etiqueta de "votos individuales".
+    const layerChipHtml = speech.layer
+      ? `<span class="layer-chip">
+           <span class="layer-chip-dot"></span>
+           ${speech.layerName}${layerFilled ? ' · Rellenada' : ''}
+         </span>`
+      : `<span class="layer-chip" style="background:#eef2e8;border-color:#cdd9c0;color:var(--olive-dark)">
+           Voto individual · Sin capa
+         </span>`;
+
+    // Badge de estado actual.
+    let stateBadgeHtml = '';
+    if (isLive)        stateBadgeHtml = `<span class="speech-state-badge live"><span class="dot"></span>En directo</span>`;
+    else if (isDone)   stateBadgeHtml = `<span class="speech-state-badge done">✓ Terminado</span>`;
+    else               stateBadgeHtml = `<span class="speech-state-badge pending">Pendiente</span>`;
+
+    // Botón según estado.
+    let btnHtml = '';
+    if (isPending) {
+      const disabled = (state.ceremonyStatus !== 'live') || (state.liveSpeechId !== null);
+      btnHtml = `<button class="speech-flow-btn start-btn" data-action="start" data-id="${speech.id}" ${disabled ? 'disabled' : ''}>▶ Empezar discurso</button>`;
+    } else if (isLive) {
+      btnHtml = `<button class="speech-flow-btn end-btn" data-action="end" data-id="${speech.id}">✓ Terminar discurso</button>`;
+    }
 
     card.innerHTML = `
       <div class="card-main-row">
@@ -860,75 +1088,105 @@ function renderList() {
           <div class="card-title">${speech.speaker}</div>
           <div class="card-subtitle">${speech.role}</div>
         </div>
-        <label class="toggle-switch" title="Mostrar discurso en el viewer">
-          <input type="checkbox" data-id="${speech.id}" ${isActive ? 'checked' : ''}>
-          <span class="toggle-track"></span>
-        </label>
       </div>
       <div style="margin-left:34px">
-        <span class="layer-chip">
-          <span class="layer-chip-dot"></span>
-          ${speech.layerName}
-        </span>
-        <div class="card-status">
-          <span class="status-dot${isActive ? ' active' : ''}"></span>
-          <span style="color: ${isFilled ? 'var(--brown-mid)' : (isActive ? 'var(--olive-mid)' : 'var(--text-light)')}; font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase">
-            ${isFilled ? 'Capa rellenada' : (isActive ? 'Activo · visible en pantalla' : 'Inactivo · oculto')}
-          </span>
-        </div>
+        ${layerChipHtml}
+        <div style="margin-top:0.35rem">${stateBadgeHtml}</div>
       </div>
-      <button class="finish-btn" data-finish-id="${speech.id}" ${isFilled ? 'disabled' : ''} ${!isActive ? 'disabled' : ''}>
-        ${isFilled ? '✓ Capa rellenada' : '✓ Marcar terminado'}
-      </button>
+      ${btnHtml}
     `;
 
-    const checkbox = card.querySelector('input[type="checkbox"]');
-    checkbox.addEventListener('change', () => {
-      const id = parseInt(checkbox.dataset.id);
-      if (checkbox.checked) {
-        if (!state.activeSpeeches.includes(id)) {
-          state.activeSpeeches = SPEECHES
-            .filter(s => state.activeSpeeches.includes(s.id) || s.id === id)
-            .map(s => s.id);
-        }
-      } else {
-        state.activeSpeeches = state.activeSpeeches.filter(sid => sid !== id);
-      }
-      updateUI();
-      broadcast();
-    });
-
-    const finishBtn = card.querySelector('.finish-btn');
-    finishBtn.addEventListener('click', () => {
-      if (finishBtn.disabled) return;
-      if (!state.filledLayers.includes(speech.layer)) {
-        state.filledLayers = [...state.filledLayers, speech.layer];
-        updateUI();
-        broadcast();
-      }
-    });
+    const flowBtn = card.querySelector('.speech-flow-btn');
+    if (flowBtn) {
+      flowBtn.addEventListener('click', () => {
+        if (flowBtn.disabled) return;
+        const action = flowBtn.dataset.action;
+        const id = parseInt(flowBtn.dataset.id, 10);
+        if (action === 'start') startSpeech(id);
+        else if (action === 'end') endSpeech(id);
+      });
+    }
 
     list.appendChild(card);
   });
 
   updateProgress();
+  updateSeedsButton();
 }
 
-function updatePageControl() {
-  const toggle = document.getElementById('page-toggle');
-  const dot = document.getElementById('page-dot');
-  const desc = document.getElementById('page-desc');
+function startSpeech(id) {
+  if (state.ceremonyStatus !== 'live') return;
+  if (state.liveSpeechId !== null) return;
+  if (state.pastSpeeches.includes(id)) return;
+  state.liveSpeechId = id;
+  updateUI();
+  broadcast();
+}
 
-  const isMain = state.page === 'main';
-  toggle.checked = isMain;
-  dot.classList.toggle('active', isMain);
-  desc.textContent = isMain
-    ? 'La pantalla muestra los discursos'
-    : 'La pantalla muestra la portada';
+function endSpeech(id) {
+  if (state.liveSpeechId !== id) return;
+  const speech = SPEECHES.find(s => s.id === id);
+  state.liveSpeechId = null;
+  state.pastSpeeches = [...state.pastSpeeches, id];
+  // Si el discurso tenía capa asociada, rellenarla automáticamente (dispara la ceremonia en el viewer).
+  if (speech && speech.layer && !state.filledLayers.includes(speech.layer)) {
+    state.filledLayers = [...state.filledLayers, speech.layer];
+  }
+  updateUI();
+  broadcast();
+}
+
+function updateCeremonyControl() {
+  const chip   = document.getElementById('ceremony-status-chip');
+  const startBtn = document.getElementById('btn-start');
+  const ringsBtn = document.getElementById('btn-rings');
+  const endBtn   = document.getElementById('btn-end');
+  const help     = document.getElementById('ceremony-help');
+
+  const STATUS_LABELS = { pre:'PRE-BODA', live:'EN DIRECTO', rings:'MOMENTO ANILLOS', ended:'TERMINADA' };
+  chip.textContent = STATUS_LABELS[state.ceremonyStatus] || 'PRE-BODA';
+  chip.setAttribute('data-status', state.ceremonyStatus);
+
+  startBtn.disabled = state.ceremonyStatus !== 'pre';
+  ringsBtn.disabled = !(state.ceremonyStatus === 'live' && state.filledLayers.includes('seeds'));
+  endBtn.disabled   = !(state.ceremonyStatus === 'live' || state.ceremonyStatus === 'rings');
+
+  // Texto de ayuda contextual.
+  let helpText = '';
+  if (state.ceremonyStatus === 'pre') {
+    helpText = 'Cuando pulses "Iniciar ceremonia" el viewer pasará al modo en directo.';
+  } else if (state.ceremonyStatus === 'live') {
+    if (!state.filledLayers.includes('seeds')) {
+      helpText = 'Para activar el momento anillos, primero deben terminarse todos los discursos y echarse las semillas.';
+    } else {
+      helpText = 'Todo listo. Cuando los novios estén con los anillos, pulsa "Momento anillos".';
+    }
+  } else if (state.ceremonyStatus === 'rings') {
+    helpText = 'El viewer está mostrando los anillos. Pulsa "Terminar ceremonia" cuando acabéis.';
+  } else if (state.ceremonyStatus === 'ended') {
+    helpText = 'La ceremonia ha terminado. Todos los invitados están en la portada sin acceso.';
+  }
+  help.textContent = helpText;
+}
+
+function updateSeedsButton() {
+  const btn = document.getElementById('seeds-btn');
+  if (!btn) return;
+  const bothDone = state.pastSpeeches.includes(6) && state.pastSpeeches.includes(7);
+  const seedsFilled = state.filledLayers.includes('seeds');
+  if (seedsFilled) {
+    btn.disabled = true;
+    btn.classList.add('filled');
+    btn.textContent = '✓ Semillas en la maceta';
+  } else {
+    btn.classList.remove('filled');
+    btn.textContent = '💚 Echar semillas juntos';
+    btn.disabled = !(bothDone && state.ceremonyStatus === 'live');
+  }
 }
 
 function updateProgress() {
-  const total = SPEECHES.length;
+  const total = ALL_LAYERS.length; // 6 capas
   const filled = state.filledLayers.length;
   const pct = Math.round((filled / total) * 100);
   document.getElementById('progress-fill').style.width = pct + '%';
@@ -938,21 +1196,57 @@ function updateProgress() {
 
 function updateUI() {
   renderList();
-  updatePageControl();
+  updateCeremonyControl();
 }
 
-// ─── PAGE TOGGLE ───
-document.getElementById('page-toggle').addEventListener('change', function() {
-  state.page = this.checked ? 'main' : 'landing';
+// ─── CEREMONY ACTIONS ───
+document.getElementById('btn-start').addEventListener('click', () => {
+  if (state.ceremonyStatus !== 'pre') return;
+  state.ceremonyStatus = 'live';
   updateUI();
   broadcast();
 });
 
-// ─── RESET LAYERS ───
-document.getElementById('reset-layers-btn').addEventListener('click', () => {
-  if (state.filledLayers.length === 0) return;
-  if (!confirm('¿Vaciar la maceta? Se borrarán todas las capas rellenadas en el viewer.')) return;
-  state.filledLayers = [];
+document.getElementById('btn-rings').addEventListener('click', () => {
+  if (state.ceremonyStatus !== 'live') return;
+  if (!state.filledLayers.includes('seeds')) {
+    alert('Las semillas todavía no están en la maceta. Termina los votos y pulsa "Echar semillas juntos" antes.');
+    return;
+  }
+  state.ceremonyStatus = 'rings';
+  state.liveSpeechId = null;
+  updateUI();
+  broadcast();
+});
+
+document.getElementById('btn-end').addEventListener('click', () => {
+  if (state.ceremonyStatus !== 'live' && state.ceremonyStatus !== 'rings') return;
+  if (!confirm('¿Terminar la ceremonia? Todos los invitados volverán a la portada sin acceso al contenido.')) return;
+  state.ceremonyStatus = 'ended';
+  state.liveSpeechId = null;
+  updateUI();
+  broadcast();
+});
+
+// ─── SEEDS ACTION ───
+document.getElementById('seeds-btn').addEventListener('click', () => {
+  if (state.filledLayers.includes('seeds')) return;
+  if (!state.pastSpeeches.includes(6) || !state.pastSpeeches.includes(7)) return;
+  if (state.ceremonyStatus !== 'live') return;
+  state.filledLayers = [...state.filledLayers, 'seeds'];
+  updateUI();
+  broadcast();
+});
+
+// ─── RESET CEREMONY ───
+document.getElementById('reset-ceremony-btn').addEventListener('click', () => {
+  if (!confirm('¿Reiniciar toda la ceremonia? Se borrará el discurso en directo, los pasados y las capas de la maceta. El viewer volverá a la portada.')) return;
+  state = {
+    ceremonyStatus: 'pre',
+    liveSpeechId:   null,
+    pastSpeeches:   [],
+    filledLayers:   []
+  };
   updateUI();
   broadcast();
 });
@@ -975,14 +1269,9 @@ updateUI();
 // ─── FIREBASE SYNC (state) ───
 stateRef.on('value', (snapshot) => {
   const remote = snapshot.val();
-  if (remote) {
-    state = {
-      page: remote.page || 'landing',
-      activeSpeeches: remote.activeSpeeches || [],
-      filledLayers: remote.filledLayers || []
-    };
-    updateUI();
-  }
+  if (!remote) return;
+  state = migrateRemoteState(remote);
+  updateUI();
 });
 
 // ─── MESSAGES + GALLERY (Firestore) ───
